@@ -1,0 +1,12 @@
+{
+  "mode": "operate",
+  "conceptSeed": {
+    "key": "44077368",
+    "source": "degraded",
+    "assignedCandidate": 5
+  },
+  "world": "Official match sheet and academy operations ledger",
+  "firstViewport": "Branch context, players, subscriptions, collection, bus capacity, and decisions are visible together.",
+  "signatureInteraction": "Changing the branch updates branch-scoped operational and financial records throughout the prototype.",
+  "buildPath": "code"
+}

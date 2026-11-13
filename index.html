@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10241d">
+  <title>خط الملعب — إدارة الأكاديمية</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 20v-1.6a4.4 4.4 0 0 0-4.4-4.4H6.4A4.4 4.4 0 0 0 2 18.4V20M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 20v-1.6a4.4 4.4 0 0 0-3.3-4.25M16.2 2.1a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><path d="M3 5h18v14H3zM3 9h18M7 15h4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-coach" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M17 8l2 2 4-4"/></symbol>
+    <symbol id="i-bus" viewBox="0 0 24 24"><path d="M5 17h14M6 4h12a3 3 0 0 1 3 3v10H3V7a3 3 0 0 1 3-3ZM6 17v3M18 17v3M7 9h10M7 13h2M15 13h2"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 6h16a2 2 0 0 1 2 2v11H5a2 2 0 0 1-2-2V6Zm0 0 13-3v3M15 11h6v5h-6a2.5 2.5 0 0 1 0-5Z"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4-8-4Zm0 0v10l8 4 8-4V7M12 11v10"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10ZM9 12l2 2 4-4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <main id="login-view" class="login-shell">
+    <section class="login-brand" aria-labelledby="login-title">
+      <div class="brand-lockup large"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>خط الملعب</strong><small>إدارة أكاديميات كرة القدم</small></div></div>
+      <div class="login-message"><p class="edition">نسخة العرض التجريبية</p><h1 id="login-title">كل فرع في الملعب.<br>وكل رقم تحت عينك.</h1><p>إدارة اللاعبين، الاشتراكات، الحضور، المدربين والباصات من لوحة واحدة واضحة.</p></div>
+      <div class="pitch-diagram" aria-hidden="true"><span class="center-circle"></span><span class="goal goal-a"></span><span class="goal goal-b"></span></div>
+    </section>
+    <section class="login-panel" aria-label="تسجيل الدخول">
+      <form id="login-form" class="login-form" novalidate>
+        <div class="form-heading"><h2>تسجيل الدخول</h2><p>أهلًا بك في غرفة إدارة الأكاديمية</p></div>
+        <label>البريد الإلكتروني<input id="email" type="email" value="admin@gmail.com" autocomplete="username" required></label>
+        <label>كلمة المرور<input id="password" type="password" value="password" autocomplete="current-password" required></label>
+        <div id="login-error" class="form-error" role="alert" hidden>البيانات غير صحيحة. استخدم بيانات العرض الموضحة بالأسفل.</div>
+        <button class="btn btn-primary btn-block" type="submit">دخول لوحة الإدارة <svg><use href="#i-arrow"/></svg></button>
+        <div class="demo-credentials"><span>بيانات العرض</span><code>admin@gmail.com</code><code>password</code></div>
+      </form>
+      <p class="prototype-note">نموذج واجهة فقط — البيانات المعروضة توضيحية</p>
+    </section>
+  </main>
+
+  <div id="app-view" class="app-shell" hidden>
+    <aside id="sidebar" class="sidebar">
+      <div class="brand-lockup"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>خط الملعب</strong><small>إدارة الأكاديمية</small></div></div>
+      <nav class="main-nav" aria-label="القائمة الرئيسية">
+        <button class="nav-item active" data-page="overview"><svg><use href="#i-grid"/></svg><span>نظرة عامة</span></button>
+        <button class="nav-item" data-page="players"><svg><use href="#i-users"/></svg><span>اللاعبون</span><em>248</em></button>
+        <button class="nav-item" data-page="subscriptions"><svg><use href="#i-card"/></svg><span>الاشتراكات</span></button>
+        <button class="nav-item" data-page="attendance"><svg><use href="#i-check"/></svg><span>الحضور</span></button>
+        <button class="nav-item" data-page="coaches"><svg><use href="#i-coach"/></svg><span>المدربون</span></button>
+        <button class="nav-item" data-page="buses"><svg><use href="#i-bus"/></svg><span>الباصات</span><em class="alert-count">2</em></button>
+        <button class="nav-item" data-page="finance"><svg><use href="#i-wallet"/></svg><span>الحسابات والمالية</span></button>
+        <button class="nav-item" data-page="extras"><svg><use href="#i-box"/></svg><span>المتنوعات</span></button>
+        <button class="nav-item" data-page="roles"><svg><use href="#i-shield"/></svg><span>الأدوار والصلاحيات</span></button>
+      </nav>
+      <div class="sidebar-footer"><div class="user-avatar">م إ</div><div><strong>محمود إبراهيم</strong><span>عضو مجلس إدارة</span></div><button id="logout-btn" class="icon-btn" aria-label="تسجيل الخروج"><svg><use href="#i-arrow"/></svg></button></div>
+    </aside>
+
+    <div class="content-shell">
+      <header class="topbar">
+        <button id="menu-btn" class="icon-btn mobile-only" aria-label="فتح القائمة"><svg><use href="#i-menu"/></svg></button>
+        <div class="branch-control"><label for="branch-select">الفرع الحالي</label><select id="branch-select"><option value="badr">فرع بدر</option><option value="shorouk">فرع الشروق</option></select></div>
+        <span class="live-dot"><i></i> البيانات محدثة الآن</span>
+        <div class="top-actions"><button class="icon-btn" aria-label="الإشعارات"><svg><use href="#i-bell"/></svg><b>3</b></button><button id="export-btn" class="btn btn-secondary"><svg><use href="#i-download"/></svg> تصدير التقرير</button></div>
+      </header>
+
+      <main id="workspace" class="workspace">
+        <section class="page active" data-page="overview">
+          <div class="page-heading"><div><p id="today-date"></p><h1>صباح الخير يا محمود</h1><p>هذه صورة اليوم في <strong data-branch-name>فرع بدر</strong> — توجد 3 نقاط تحتاج مراجعتك.</p></div><button class="btn btn-primary" data-open="quick-dialog"><svg><use href="#i-plus"/></svg> إجراء سريع</button></div>
+          <section class="scoreboard" aria-label="مؤشرات الفرع"><div><span>اللاعبون المسجلون</span><strong data-metric="players">148</strong><small data-delta="players">+12 هذا الشهر</small></div><div><span>اشتراكات نشطة</span><strong data-metric="active">132</strong><small data-delta="active">89% من اللاعبين</small></div><div><span>تحصيل الشهر</span><strong data-metric="collection">86%</strong><small data-delta="collection">325,400 ج.م</small></div><div><span>مقاعد باص متاحة</span><strong data-metric="seats">7</strong><small data-delta="seats">من أصل 84 مقعد</small></div></section>
+          <section class="attention-strip" aria-label="تنبيهات مهمة"><div class="attention-title"><span>تحتاج قرارك</span><strong>3</strong></div><button data-go="subscriptions"><i class="status-dot amber"></i><span><b>12 اشتراكًا</b> تجاوز موعد السداد</span><svg><use href="#i-arrow"/></svg></button><button data-go="buses"><i class="status-dot red"></i><span><b>باص 02</b> متبقٍ به مقعد واحد</span><svg><use href="#i-arrow"/></svg></button><button data-go="attendance"><i class="status-dot blue"></i><span><b>صورة حضور</b> تحتاج اعتمادًا</span><svg><use href="#i-arrow"/></svg></button></section>
+          <div class="dashboard-grid">
+            <section class="panel revenue-panel"><div class="panel-heading"><div><h2>حركة التحصيل</h2><p>آخر 6 شهور — قيمة محصلة بالجنيه</p></div><strong id="revenue-total">325,400 <small>ج.م</small></strong></div><div class="bar-chart" aria-label="رسم بياني للتحصيل الشهري"><div style="--bar:46%"><b>148k</b><i></i><span>يونيو</span></div><div style="--bar:58%"><b>186k</b><i></i><span>يوليو</span></div><div style="--bar:52%"><b>169k</b><i></i><span>أغسطس</span></div><div style="--bar:73%"><b>238k</b><i></i><span>سبتمبر</span></div><div style="--bar:82%"><b>271k</b><i></i><span>أكتوبر</span></div><div class="current" style="--bar:96%"><b>325k</b><i></i><span>نوفمبر</span></div></div></section>
+            <section class="panel plan-panel"><div class="panel-heading"><div><h2>نوع الاشتراك</h2><p>توزيع اللاعبين النشطين</p></div></div><div class="plan-breakdown"><div class="donut" aria-label="72 بالمئة اشتراك شهري"><span><b>132</b>نشط</span></div><ul><li><i class="green"></i><span>شهري</span><b data-plan="monthly">95 لاعب</b></li><li><i class="orange"></i><span>بالسيشن</span><b data-plan="session">37 لاعب</b></li><li><i class="gray"></i><span>موقوف مؤقتًا</span><b data-plan="paused">16 لاعب</b></li></ul></div></section>
+          </div>
+          <div class="dashboard-grid lower">
+            <section class="panel operations-panel"><div class="panel-heading"><div><h2>حضور اليوم</h2><p>الحصة المسائية · 6:00 م</p></div><button class="text-btn" data-go="attendance">فتح سجل الحضور <svg><use href="#i-arrow"/></svg></button></div><div class="attendance-summary"><div><strong data-attendance="players">34</strong><span>لاعبًا حاضرًا</span></div><div><strong data-attendance="coaches">4/5</strong><span>مدربين حضروا</span></div><div><strong data-attendance="rate">91%</strong><span>نسبة الحضور</span></div></div><div class="coach-row"><div class="avatar a1">ع م</div><div><strong>عمر مصطفى</strong><span>المدرب الرئيسي · وصل 5:42 م</span></div><span class="status present">حاضر</span></div><div class="coach-row"><div class="avatar a2">ك س</div><div><strong>كريم سامي</strong><span>مدرب حراس · لم يسجل بعد</span></div><span class="status late">منتظر</span></div></section>
+            <section class="panel branches-panel"><div class="panel-heading"><div><h2>مقارنة الفروع</h2><p>أداء نوفمبر الحالي</p></div></div><div class="branch-compare"><div class="comparison-head"><span>الفرع</span><span>اللاعبون</span><span>التحصيل</span></div><div><b>بدر</b><span>148</span><strong>86%</strong></div><div><b>الشروق</b><span>100</span><strong>78%</strong></div></div><button class="btn btn-quiet btn-block" data-go="finance">عرض التقرير المالي الكامل</button></section>
+          </div>
+        </section>
+
+        <section class="page" data-page="players"><div class="page-heading"><div><p>قاعدة اللاعبين</p><h1>اللاعبون</h1><p>بيانات اللاعبين وحالة الاشتراك والباص في <strong data-branch-name></strong>.</p></div><button class="btn btn-primary" data-open="player-dialog"><svg><use href="#i-plus"/></svg> إضافة لاعب</button></div><div class="toolbar"><label class="search-box"><svg><use href="#i-search"/></svg><input id="player-search" type="search" placeholder="ابحث بالاسم أو الكود"></label><select aria-label="تصفية حالة الاشتراك"><option>كل حالات الاشتراك</option><option>نشط</option><option>متأخر</option></select><button class="btn btn-secondary"><svg><use href="#i-download"/></svg> تصدير</button></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th>اللاعب</th><th>الكود</th><th>الاشتراك</th><th>الحضور</th><th>الباص</th><th>الحالة</th></tr></thead><tbody id="players-table"></tbody></table></div></section>
+
+        <section class="page" data-page="subscriptions"><div class="page-heading"><div><p>الإيرادات المتكررة</p><h1>الاشتراكات</h1><p>خطط شهرية أو بالسيشن، بأسعار خاصة لكل فرع.</p></div><button class="btn btn-primary" data-open="subscription-dialog"><svg><use href="#i-plus"/></svg> اشتراك جديد</button></div><div class="subscription-layout"><section class="plan-board"><h2>خطط <span data-branch-name></span></h2><div id="plan-cards"></div></section><section class="panel"><div class="panel-heading"><div><h2>دفعات تحتاج متابعة</h2><p>الأقرب لموعد الإيقاف</p></div></div><div class="payment-list"><div><span class="avatar">ي ع</span><p><b>يوسف علي</b><small>متأخر 9 أيام</small></p><strong>1,250 ج.م</strong></div><div><span class="avatar a2">ز م</span><p><b>زياد محمد</b><small>متأخر 6 أيام</small></p><strong>900 ج.م</strong></div><div><span class="avatar a3">م و</span><p><b>مروان وليد</b><small>يستحق اليوم</small></p><strong>1,250 ج.م</strong></div></div></section></div></section>
+
+        <section class="page" data-page="attendance"><div class="page-heading"><div><p>سجل اليوم</p><h1>الحضور</h1><p>حضور اللاعبين، ووصول وانصراف المدربين بصورة إثبات.</p></div><button class="btn btn-secondary" id="mark-all"><svg><use href="#i-check"/></svg> تحضير الكل</button></div><div class="segment-control" role="tablist"><button class="active" data-att-tab="player-attendance">اللاعبون</button><button data-att-tab="coach-attendance">المدربون</button></div><section id="player-attendance" class="attendance-tab active"><div class="session-board"><div><span>الحصة الحالية</span><strong>الأربعاء · 6:00 م</strong></div><div><span>المجموعة</span><strong>تحت 14 سنة</strong></div><div><span>الحضور</span><strong id="attendance-count">4 من 6</strong></div></div><div id="attendance-roster" class="roster"></div></section><section id="coach-attendance" class="attendance-tab"><div class="coach-checkin"><div class="camera-box"><input id="coach-photo" type="file" accept="image/*" capture="environment"><img id="coach-preview" alt="معاينة صورة حضور المدرب" hidden><svg><use href="#i-coach"/></svg><strong>صورة إثبات الحضور</strong><span>ارفع صورة واضحة من موقع الفرع</span><label for="coach-photo" class="btn btn-secondary">اختيار صورة</label></div><form id="coach-checkin-form"><label>المدرب<select><option>كريم سامي — مدرب حراس</option><option>عمر مصطفى — مدرب رئيسي</option><option>أحمد علاء — لياقة بدنية</option></select></label><label>وقت الوصول<input type="time" value="17:48"></label><label>ملاحظة<input type="text" placeholder="اختياري"></label><button class="btn btn-primary" type="submit">تسجيل حضور المدرب</button></form></div></section></section>
+
+        <section class="page" data-page="coaches"><div class="page-heading"><div><p>فريق التدريب</p><h1>المدربون والرواتب</h1><p>عقود شهرية ثابتة أو حساب بالسيشن.</p></div><button class="btn btn-primary"><svg><use href="#i-plus"/></svg> إضافة مدرب</button></div><div class="coach-grid"><article><div class="avatar xl a1">ع م</div><div><h2>عمر مصطفى</h2><p>المدرب الرئيسي</p></div><span class="contract full">Full-time</span><dl><div><dt>الراتب الشهري</dt><dd>18,000 ج.م</dd></div><div><dt>حضور الشهر</dt><dd>23 يومًا</dd></div></dl></article><article><div class="avatar xl a2">ك س</div><div><h2>كريم سامي</h2><p>مدرب حراس</p></div><span class="contract part">Part-time</span><dl><div><dt>سعر السيشن</dt><dd>450 ج.م</dd></div><div><dt>سيشن هذا الشهر</dt><dd>14</dd></div></dl></article><article><div class="avatar xl a3">أ ع</div><div><h2>أحمد علاء</h2><p>لياقة بدنية</p></div><span class="contract part">Part-time</span><dl><div><dt>سعر السيشن</dt><dd>500 ج.م</dd></div><div><dt>سيشن هذا الشهر</dt><dd>12</dd></div></dl></article></div></section>
+
+        <section class="page" data-page="buses"><div class="page-heading"><div><p>حركة اللاعبين</p><h1>الباصات</h1><p>السعة القصوى لكل باص 28 لاعبًا، مع إمكانية الترحيل الفوري.</p></div><button class="btn btn-primary"><svg><use href="#i-plus"/></svg> إضافة باص</button></div><div id="bus-board" class="bus-board"></div><section class="transfer-board"><div><h2>ترحيل لاعب بين الباصات</h2><p>سيتم تحديث السعة فورًا في النموذج التجريبي.</p></div><form id="transfer-form"><label>اللاعب<select id="transfer-player"><option value="أحمد هاني">أحمد هاني — باص 02</option><option value="يوسف علي">يوسف علي — باص 01</option></select></label><label>إلى الباص<select id="transfer-bus"><option value="1">باص 01</option><option value="3">باص 03</option></select></label><button class="btn btn-primary" type="submit">تأكيد الترحيل</button></form></section></section>
+
+        <section class="page" data-page="finance"><div class="page-heading"><div><p>الحسابات والمالية</p><h1>المركز المالي</h1><p>ملخص المقبوضات والمصروفات حسب الفرع.</p></div><button class="btn btn-secondary"><svg><use href="#i-download"/></svg> تصدير Excel</button></div><section class="financial-ledger"><div><span>إجمالي المقبوضات</span><strong id="finance-income">325,400 ج.م</strong><small>اشتراكات + باصات + متنوعات</small></div><div><span>إجمالي المصروفات</span><strong id="finance-expenses">184,700 ج.م</strong><small>رواتب + تشغيل + نقل</small></div><div class="net"><span>صافي الشهر</span><strong id="finance-net">140,700 ج.م</strong><small>حتى 13 نوفمبر</small></div></section><div class="data-table-wrap"><table class="data-table"><thead><tr><th>البيان</th><th>الفئة</th><th>التاريخ</th><th>طريقة الدفع</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody><tr><td><b>اشتراك يوسف علي</b></td><td>اشتراكات</td><td>13 نوفمبر</td><td>InstaPay</td><td class="money in">+1,250 ج.م</td><td><span class="status present">مؤكد</span></td></tr><tr><td><b>صيانة باص 02</b></td><td>نقل</td><td>12 نوفمبر</td><td>نقدي</td><td class="money out">−3,400 ج.م</td><td><span class="status present">معتمد</span></td></tr><tr><td><b>شراء 12 كرة تدريب</b></td><td>متنوعات</td><td>11 نوفمبر</td><td>تحويل بنكي</td><td class="money out">−8,600 ج.م</td><td><span class="status late">للمراجعة</span></td></tr></tbody></table></div></section>
+
+        <section class="page" data-page="extras"><div class="page-heading"><div><p>المنتجات والخدمات</p><h1>المتنوعات وأسعار الفروع</h1><p>عدّل سعر كل عنصر داخل الفرع الحالي فقط.</p></div><button id="save-extras" class="btn btn-primary">حفظ الأسعار</button></div><div class="notice"><svg><use href="#i-box"/></svg><p><b>الأسعار مستقلة لكل فرع.</b> أي تعديل هنا لن يغير سعر نفس العنصر في الفروع الأخرى.</p></div><div class="data-table-wrap"><table class="data-table extras-table"><thead><tr><th>العنصر</th><th>الفئة</th><th>سعر <span data-branch-name></span></th><th>المخزون</th><th>الحالة</th></tr></thead><tbody id="extras-table"></tbody></table></div></section>
+
+        <section class="page" data-page="roles"><div class="page-heading"><div><p>التحكم في الوصول</p><h1>الأدوار والصلاحيات</h1><p>من يرى البيانات ومن يملك صلاحية التعديل والاعتماد.</p></div><button class="btn btn-primary"><svg><use href="#i-plus"/></svg> إضافة مستخدم</button></div><div class="role-summary"><div><span class="role-badge admin">مجلس إدارة</span><b>2 مستخدم</b><p>وصول كامل لكل الفروع والمالية والإعدادات.</p></div><div><span class="role-badge">إداري</span><b>6 مستخدمين</b><p>اللاعبون والحضور والمدربون والباصات.</p></div><div><span class="role-badge finance">حسابات ومالية</span><b>3 مستخدمين</b><p>التحصيل والمصروفات والتقارير فقط.</p></div></div><div class="data-table-wrap"><table class="data-table permissions"><thead><tr><th>الصلاحية</th><th>مجلس الإدارة</th><th>الإداري</th><th>الحسابات</th><th>المالية</th></tr></thead><tbody><tr><td>عرض كل الفروع</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr><tr><td>إدارة اللاعبين والحضور</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr><tr><td>تعديل أسعار الاشتراكات</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr><tr><td>اعتماد المصروفات</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr><tr><td>إدارة الأدوار والصلاحيات</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div></section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="quick-dialog"><button class="dialog-close" data-close aria-label="إغلاق"><svg><use href="#i-x"/></svg></button><h2>إجراء سريع</h2><p>اختر العملية التي تريد تنفيذها.</p><div class="quick-actions"><button data-go="players"><svg><use href="#i-users"/></svg><span><b>إضافة لاعب</b><small>ملف واشتراك جديد</small></span></button><button data-go="attendance"><svg><use href="#i-check"/></svg><span><b>تسجيل حضور</b><small>لاعب أو مدرب</small></span></button><button data-go="finance"><svg><use href="#i-wallet"/></svg><span><b>إضافة مصروف</b><small>للمراجعة والاعتماد</small></span></button><button data-go="buses"><svg><use href="#i-bus"/></svg><span><b>ترحيل لاعب</b><small>بين باصات الفرع</small></span></button></div></dialog>
+  <dialog id="player-dialog"><button class="dialog-close" data-close aria-label="إغلاق"><svg><use href="#i-x"/></svg></button><h2>إضافة لاعب جديد</h2><form id="player-form" class="dialog-form"><label>اسم اللاعب<input name="name" required placeholder="الاسم ثلاثيًا"></label><div class="form-row"><label>سنة الميلاد<input type="number" value="2012" min="2005" max="2021"></label><label>نوع الاشتراك<select><option>شهري</option><option>بالسيشن</option></select></label></div><label>الباص<select><option>بدون باص</option><option>باص 01</option><option>باص 02</option><option>باص 03</option></select></label><button class="btn btn-primary" type="submit">حفظ اللاعب</button></form></dialog>
+  <dialog id="subscription-dialog"><button class="dialog-close" data-close aria-label="إغلاق"><svg><use href="#i-x"/></svg></button><h2>اشتراك جديد</h2><form id="subscription-form" class="dialog-form"><label>اللاعب<select><option>يوسف علي</option><option>زياد محمد</option><option>أحمد هاني</option></select></label><fieldset><legend>طريقة الحساب</legend><label class="radio-card"><input type="radio" name="plan" value="monthly" checked><span><b>شهري</b><small>سعر ثابت طوال الشهر</small></span></label><label class="radio-card"><input type="radio" name="plan" value="session"><span><b>بالسيشن</b><small>8 سيشن · مرتان أسبوعيًا</small></span></label></fieldset><div id="month-note" class="month-note">الفترة: 1–30 نوفمبر · السعر لا يتأثر بعدد أيام الشهر.</div><button class="btn btn-primary" type="submit">تأكيد الاشتراك</button></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

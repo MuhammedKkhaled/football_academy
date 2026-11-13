@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T21:22:47Z",
+  "title": "Design System: Football Academy Operations",
+  "extensions": {
+    "colorMeta": {
+      "pitch-ink": {
+        "role": "neutral",
+        "displayName": "Pitch Ink",
+        "canonical": "#10241d",
+        "tonalRamp": ["color-mix(in srgb, #10241d 35%, black)", "#10241d", "color-mix(in srgb, #10241d 80%, white)", "color-mix(in srgb, #10241d 65%, white)", "color-mix(in srgb, #10241d 50%, white)", "color-mix(in srgb, #10241d 35%, white)", "color-mix(in srgb, #10241d 20%, white)", "color-mix(in srgb, #10241d 8%, white)"]
+      },
+      "pitch-ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Pitch Ink",
+        "canonical": "#244238",
+        "tonalRamp": ["color-mix(in srgb, #244238 35%, black)", "#244238", "color-mix(in srgb, #244238 80%, white)", "color-mix(in srgb, #244238 65%, white)", "color-mix(in srgb, #244238 50%, white)", "color-mix(in srgb, #244238 35%, white)", "color-mix(in srgb, #244238 20%, white)", "color-mix(in srgb, #244238 8%, white)"]
+      },
+      "warm-paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "#f4f2ea",
+        "tonalRamp": ["color-mix(in srgb, #f4f2ea 30%, black)", "color-mix(in srgb, #f4f2ea 45%, black)", "color-mix(in srgb, #f4f2ea 65%, black)", "color-mix(in srgb, #f4f2ea 82%, black)", "#f4f2ea", "color-mix(in srgb, #f4f2ea 80%, white)", "color-mix(in srgb, #f4f2ea 60%, white)", "color-mix(in srgb, #f4f2ea 30%, white)"]
+      },
+      "clean-sheet": {
+        "role": "neutral",
+        "displayName": "Clean Sheet",
+        "canonical": "#fffefa",
+        "tonalRamp": ["color-mix(in srgb, #fffefa 30%, black)", "color-mix(in srgb, #fffefa 45%, black)", "color-mix(in srgb, #fffefa 65%, black)", "color-mix(in srgb, #fffefa 82%, black)", "#fffefa", "color-mix(in srgb, #fffefa 80%, white)", "color-mix(in srgb, #fffefa 60%, white)", "color-mix(in srgb, #fffefa 30%, white)"]
+      },
+      "ruled-line": {
+        "role": "neutral",
+        "displayName": "Ruled Line",
+        "canonical": "#dcded4",
+        "tonalRamp": ["color-mix(in srgb, #dcded4 30%, black)", "color-mix(in srgb, #dcded4 45%, black)", "color-mix(in srgb, #dcded4 65%, black)", "#dcded4", "color-mix(in srgb, #dcded4 75%, white)", "color-mix(in srgb, #dcded4 55%, white)", "color-mix(in srgb, #dcded4 35%, white)", "color-mix(in srgb, #dcded4 15%, white)"]
+      },
+      "ledger-muted": {
+        "role": "neutral",
+        "displayName": "Ledger Muted",
+        "canonical": "#53625b",
+        "tonalRamp": ["color-mix(in srgb, #53625b 35%, black)", "#53625b", "color-mix(in srgb, #53625b 80%, white)", "color-mix(in srgb, #53625b 65%, white)", "color-mix(in srgb, #53625b 50%, white)", "color-mix(in srgb, #53625b 35%, white)", "color-mix(in srgb, #53625b 20%, white)", "color-mix(in srgb, #53625b 8%, white)"]
+      },
+      "pitch-green": {
+        "role": "primary",
+        "displayName": "Pitch Green",
+        "canonical": "#087a52",
+        "tonalRamp": ["color-mix(in srgb, #087a52 35%, black)", "#087a52", "color-mix(in srgb, #087a52 80%, white)", "color-mix(in srgb, #087a52 65%, white)", "color-mix(in srgb, #087a52 50%, white)", "color-mix(in srgb, #087a52 35%, white)", "color-mix(in srgb, #087a52 20%, white)", "color-mix(in srgb, #087a52 8%, white)"]
+      },
+      "pitch-green-dark": {
+        "role": "primary",
+        "displayName": "Deep Pitch Green",
+        "canonical": "#075b40",
+        "tonalRamp": ["color-mix(in srgb, #075b40 35%, black)", "#075b40", "color-mix(in srgb, #075b40 80%, white)", "color-mix(in srgb, #075b40 65%, white)", "color-mix(in srgb, #075b40 50%, white)", "color-mix(in srgb, #075b40 35%, white)", "color-mix(in srgb, #075b40 20%, white)", "color-mix(in srgb, #075b40 8%, white)"]
+      },
+      "pitch-green-soft": {
+        "role": "primary",
+        "displayName": "Soft Pitch Green",
+        "canonical": "#dff1e8",
+        "tonalRamp": ["color-mix(in srgb, #dff1e8 30%, black)", "color-mix(in srgb, #dff1e8 45%, black)", "color-mix(in srgb, #dff1e8 65%, black)", "#dff1e8", "color-mix(in srgb, #dff1e8 75%, white)", "color-mix(in srgb, #dff1e8 55%, white)", "color-mix(in srgb, #dff1e8 35%, white)", "color-mix(in srgb, #dff1e8 15%, white)"]
+      },
+      "decision-orange": {
+        "role": "secondary",
+        "displayName": "Decision Orange",
+        "canonical": "#e98b2a",
+        "tonalRamp": ["color-mix(in srgb, #e98b2a 35%, black)", "color-mix(in srgb, #e98b2a 70%, black)", "#e98b2a", "color-mix(in srgb, #e98b2a 80%, white)", "color-mix(in srgb, #e98b2a 65%, white)", "color-mix(in srgb, #e98b2a 45%, white)", "color-mix(in srgb, #e98b2a 25%, white)", "color-mix(in srgb, #e98b2a 10%, white)"]
+      },
+      "decision-orange-soft": {
+        "role": "secondary",
+        "displayName": "Soft Decision Orange",
+        "canonical": "#fff0dc",
+        "tonalRamp": ["color-mix(in srgb, #fff0dc 30%, black)", "color-mix(in srgb, #fff0dc 45%, black)", "color-mix(in srgb, #fff0dc 65%, black)", "#fff0dc", "color-mix(in srgb, #fff0dc 75%, white)", "color-mix(in srgb, #fff0dc 55%, white)", "color-mix(in srgb, #fff0dc 35%, white)", "color-mix(in srgb, #fff0dc 15%, white)"]
+      },
+      "exception-red": {
+        "role": "tertiary",
+        "displayName": "Exception Red",
+        "canonical": "#c84d3e",
+        "tonalRamp": ["color-mix(in srgb, #c84d3e 35%, black)", "color-mix(in srgb, #c84d3e 70%, black)", "#c84d3e", "color-mix(in srgb, #c84d3e 80%, white)", "color-mix(in srgb, #c84d3e 65%, white)", "color-mix(in srgb, #c84d3e 45%, white)", "color-mix(in srgb, #c84d3e 25%, white)", "color-mix(in srgb, #c84d3e 10%, white)"]
+      },
+      "information-blue": {
+        "role": "tertiary",
+        "displayName": "Information Blue",
+        "canonical": "#367a9d",
+        "tonalRamp": ["color-mix(in srgb, #367a9d 35%, black)", "color-mix(in srgb, #367a9d 70%, black)", "#367a9d", "color-mix(in srgb, #367a9d 80%, white)", "color-mix(in srgb, #367a9d 65%, white)", "color-mix(in srgb, #367a9d 45%, white)", "color-mix(in srgb, #367a9d 25%, white)", "color-mix(in srgb, #367a9d 10%, white)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Login Display", "purpose": "The expressive login statement only." },
+      "headline": { "displayName": "Page Headline", "purpose": "Names the active operational view." },
+      "title": { "displayName": "Ledger Title", "purpose": "Panel and section headings." },
+      "body": { "displayName": "Arabic Interface Body", "purpose": "Records, controls, and explanatory copy." },
+      "label": { "displayName": "Operational Label", "purpose": "Metadata, table headers, statuses, and controls." }
+    },
+    "shadows": [
+      { "name": "ledger-panel", "value": "0 14px 38px rgba(21,44,36,.09)", "purpose": "Ambient lift for panels, bus cards, and toasts." },
+      { "name": "scoreboard-lift", "value": "0 10px 28px rgba(21,44,36,.06)", "purpose": "Quiet lift for the framed metric scoreboard." },
+      { "name": "table-lift", "value": "0 8px 24px rgba(21,44,36,.05)", "purpose": "Shallow separation for scrollable data ledgers." },
+      { "name": "dialog-lift", "value": "0 30px 100px rgba(7,27,20,.3)", "purpose": "High-authority depth for modal dialogs only." }
+    ],
+    "motion": [
+      { "name": "control-state", "value": "200ms ease", "purpose": "Button color and one-pixel hover lift." },
+      { "name": "page-entry", "value": "380ms cubic-bezier(.2,.8,.2,1)", "purpose": "A restrained six-pixel rise when switching pages." },
+      { "name": "sidebar-slide", "value": "300ms ease", "purpose": "Mobile sidebar entry from the right." },
+      { "name": "reduced-motion", "value": "0.01ms", "purpose": "Near-instant animation and transition duration under reduced-motion preference." }
+    ],
+    "breakpoints": [
+      { "name": "compact-desktop", "value": "1100px" },
+      { "name": "mobile", "value": "760px" }
+    ],
+    "components": [
+      {
+        "name": "Primary Button",
+        "kind": "button",
+        "refersTo": "button-primary",
+        "description": "The definitive action for saving or confirming an operational change.",
+        "html": "<button class=\"ds-btn-primary\" type=\"button\">تأكيد الإجراء</button>",
+        "css": ".ds-btn-primary { min-height: 42px; padding: 0 16px; border: 1px solid transparent; border-radius: 10px; background: var(--green, #087a52); color: #fff; font: 800 12px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; cursor: pointer; transition: transform .2s ease, background .2s ease; } .ds-btn-primary:hover { background: var(--green-dark, #075b40); transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 3px solid rgba(233,139,42,.65); outline-offset: 2px; }"
+      },
+      {
+        "name": "Secondary Button",
+        "kind": "button",
+        "refersTo": "button-secondary",
+        "description": "A supporting action that remains visible without competing with the primary decision.",
+        "html": "<button class=\"ds-btn-secondary\" type=\"button\">تصدير التقرير</button>",
+        "css": ".ds-btn-secondary { min-height: 42px; padding: 0 16px; border: 1px solid var(--line, #dcded4); border-radius: 10px; background: var(--surface, #fffefa); color: var(--ink, #10241d); font: 800 12px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; cursor: pointer; transition: transform .2s ease, background .2s ease; } .ds-btn-secondary:hover { background: #e9ece6; transform: translateY(-1px); } .ds-btn-secondary:focus-visible { outline: 3px solid rgba(233,139,42,.65); outline-offset: 2px; }"
+      },
+      {
+        "name": "Text Field",
+        "kind": "input",
+        "refersTo": "input",
+        "description": "The standard RTL field for branch-scoped data entry and search.",
+        "html": "<label class=\"ds-field\">اسم اللاعب<input type=\"text\" placeholder=\"اكتب الاسم الكامل\"></label>",
+        "css": ".ds-field { display: grid; gap: 7px; color: var(--ink, #10241d); font: 700 12px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; direction: rtl; } .ds-field input { min-height: 46px; padding: 0 13px; border: 1px solid var(--line, #dcded4); border-radius: 10px; background: #fff; color: var(--ink, #10241d); font: 400 14px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; outline: none; } .ds-field input:focus { border-color: var(--green, #087a52); box-shadow: 0 0 0 3px rgba(8,122,82,.1); } .ds-field input:focus-visible { outline: 3px solid rgba(233,139,42,.65); outline-offset: 2px; }"
+      },
+      {
+        "name": "Active Navigation Item",
+        "kind": "nav",
+        "description": "The clean-sheet active row inside the fixed pitch-ink sidebar.",
+        "html": "<button class=\"ds-nav-item ds-nav-active\" type=\"button\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z\"/></svg><span>لوحة المتابعة</span></button>",
+        "css": ".ds-nav-item { display: flex; align-items: center; gap: 11px; width: 220px; min-height: 45px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; color: #b7c5bf; font: 400 14px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; direction: rtl; cursor: pointer; } .ds-nav-item svg { width: 19px; height: 19px; fill: currentColor; } .ds-nav-item:hover { background: rgba(255,255,255,.06); color: #fff; } .ds-nav-active { background: #fff; color: var(--ink, #10241d); font-weight: 800; } .ds-nav-item:focus-visible { outline: 3px solid rgba(233,139,42,.65); outline-offset: 2px; }"
+      },
+      {
+        "name": "Present Status",
+        "kind": "chip",
+        "refersTo": "status-present",
+        "description": "An explicit positive operational state; color supports rather than replaces its text.",
+        "html": "<span class=\"ds-status-present\">حاضر</span>",
+        "css": ".ds-status-present { display: inline-flex; align-items: center; width: max-content; padding: 4px 8px; border-radius: 999px; background: var(--green-soft, #dff1e8); color: var(--green-dark, #075b40); font: 900 12px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; }"
+      },
+      {
+        "name": "Attention Status",
+        "kind": "chip",
+        "refersTo": "status-attention",
+        "description": "The compact label for late, pending, and near-capacity states.",
+        "html": "<span class=\"ds-status-attention\">للمراجعة</span>",
+        "css": ".ds-status-attention { display: inline-flex; align-items: center; width: max-content; padding: 4px 8px; border-radius: 999px; background: var(--orange-soft, #fff0dc); color: #8a551d; font: 900 12px/1.55 Tahoma, \"Segoe UI\", Arial, sans-serif; }"
+      },
+      {
+        "name": "Ledger Panel",
+        "kind": "card",
+        "refersTo": "panel",
+        "description": "A grouped operational surface on the warm paper workspace.",
+        "html": "<article class=\"ds-panel\" dir=\"rtl\"><header><div><h2>الحضور اليوم</h2><p>آخر تحديث لفرع بدر</p></div><strong>91%</strong></header><div class=\"ds-panel-rule\"><span>اللاعبون</span><b>34</b></div></article>",
+        "css": ".ds-panel { width: 320px; overflow: hidden; border-radius: 14px; background: var(--surface, #fffefa); color: var(--ink, #10241d); box-shadow: 0 14px 38px rgba(21,44,36,.09); font-family: Tahoma, \"Segoe UI\", Arial, sans-serif; } .ds-panel header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 22px 24px 0; } .ds-panel h2 { margin: 0; font-size: 17px; } .ds-panel p { margin: 2px 0 0; color: var(--muted, #53625b); font-size: 12px; } .ds-panel header > strong { font-size: 23px; } .ds-panel-rule { display: flex; justify-content: space-between; margin: 22px 24px; padding: 15px 0; border-top: 1px solid var(--line, #dcded4); border-bottom: 1px solid var(--line, #dcded4); } .ds-panel-rule span { color: var(--muted, #53625b); font-size: 12px; }"
+      },
+      {
+        "name": "Data Ledger",
+        "kind": "custom",
+        "description": "The ruled, horizontally resilient record table for players and financial activity.",
+        "html": "<div class=\"ds-table-wrap\" dir=\"rtl\"><table class=\"ds-table\"><thead><tr><th>اللاعب</th><th>الاشتراك</th><th>الحالة</th></tr></thead><tbody><tr><td><b>يوسف علي</b></td><td>شهري</td><td><span>نشط</span></td></tr></tbody></table></div>",
+        "css": ".ds-table-wrap { overflow: auto; border: 1px solid var(--line, #dcded4); border-radius: 14px; background: var(--surface, #fffefa); box-shadow: 0 8px 24px rgba(21,44,36,.05); font-family: Tahoma, \"Segoe UI\", Arial, sans-serif; } .ds-table { width: 100%; border-collapse: collapse; white-space: nowrap; color: var(--ink, #10241d); } .ds-table th, .ds-table td { padding: 15px 18px; border-bottom: 1px solid var(--line, #dcded4); text-align: right; font-size: 12px; } .ds-table th { background: #e9ece6; color: var(--muted, #53625b); } .ds-table tbody tr:hover { background: #f8f7f2; } .ds-table tbody tr:last-child td { border-bottom: 0; } .ds-table span { display: inline-flex; padding: 4px 8px; border-radius: 999px; background: var(--green-soft, #dff1e8); color: var(--green-dark, #075b40); font-weight: 900; }"
+      }
+    ],
+    "narrative": {
+      "northStar": "The Official Match Sheet",
+      "overview": "This system turns a multi-branch academy dashboard into a warm paper operations ledger: authoritative, dense, and calm enough to scan under daily administrative pressure. Deep pitch ink supplies the structure, ruled separators keep records legible, and clean sheet surfaces sit on a warm paper field.\n\nPitch green communicates the academy's live operational state; decision orange is reserved for attention, capacity pressure, and next actions. The interface is Arabic-first and right-to-left, using the platform-safe Arabic system stack so the static HTML, CSS, and JavaScript prototype remains dependency-free.",
+      "keyCharacteristics": [
+        "Warm paper material with crisp, ruled ledger surfaces.",
+        "Dense, scan-friendly Arabic RTL hierarchy.",
+        "Deep pitch ink structure with controlled green and orange signals.",
+        "Branch context remains visible before operational and financial action.",
+        "Football geometry appears as a restrained structural cue, not fabricated brand artwork."
+      ],
+      "rules": [
+        { "name": "The Decision Ink Rule", "body": "Use green for routine operational truth and orange for decisions or attention; neither color is decorative fill.", "section": "colors" },
+        { "name": "The Paper Rule", "body": "Keep warm paper behind the workspace and clean sheet on record-bearing surfaces so boundaries remain readable without excessive chrome.", "section": "colors" },
+        { "name": "The Arabic System Stack Rule", "body": "Preserve Tahoma, \"Segoe UI\", Arial, sans-serif in that order and do not add a web-font dependency.", "section": "typography" },
+        { "name": "The Number Scan Rule", "body": "Use tabular numerals for scoreboards and financial totals where columns or repeated values must compare at a glance.", "section": "typography" },
+        { "name": "The Branch-First Rule", "body": "Keep branch context visible in the sticky operating frame before users read or change branch-scoped records.", "section": "layout" },
+        { "name": "The Ledger Density Rule", "body": "Prefer shared ruled containers and compact 12px operational metadata over a loose field of individually floating cards.", "section": "layout" },
+        { "name": "The Ruled-Before-Raised Rule", "body": "Use border and tonal separation first; reserve shadows for grouped operating surfaces, overlays, and the highest-value summaries.", "section": "elevation" },
+        { "name": "The Tight-Control Rule", "body": "Controls stay tighter than panels so actions and fields read as tools placed on the sheet, not as nested cards.", "section": "shapes" }
+      ],
+      "dos": [
+        "Do preserve the warm paper, clean sheet, and ruled-line hierarchy across new operational screens.",
+        "Do keep Arabic RTL reading order, right-aligned records, readable 12px minimum operational labels, and keyboard-visible focus.",
+        "Do use pitch green for live and positive operations, decision orange for attention, and explicit text for every status.",
+        "Do reuse the fixed branch context, dense ledger rows, 14px panels, and 8px to 10px controls.",
+        "Do keep the product dependency-free: static HTML, CSS, and JavaScript with the system Arabic font stack."
+      ],
+      "donts": [
+        "Don't introduce external fonts, icon packages, frameworks, or fabricated academy assets.",
+        "Don't scatter every datum into a floating card or replace continuous table rules with excessive whitespace.",
+        "Don't use orange or green as broad decoration; their operational meaning depends on restraint.",
+        "Don't hide branch scope, bus capacity, overdue status, or financial exceptions behind secondary navigation.",
+        "Don't use football imagery as generic decoration; the implemented pitch geometry is the only established concept seed."
+      ]
+    }
+  }
+}

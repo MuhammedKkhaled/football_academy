@@ -1,0 +1,53 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-13T21:12:22.689Z",
+        "reason": "Coach evidence preview intentionally receives a local Object URL only after the administrator selects a file"
+      },
+      {
+        "rule": "icon-tile-stack",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-13T21:16:50.898Z",
+        "reason": "Dialog close controls are positioned dismiss buttons, not feature-card icon tiles"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-13T21:16:51.068Z",
+        "reason": "Data tables intentionally meet the wrapper border so headers and row rules form one ledger surface"
+      },
+      {
+        "rule": "em-dash-overuse",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-13T21:16:51.237Z",
+        "reason": "Em dashes chiefly denote unavailable permissions in the access matrix and compact Arabic separators"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-13T21:16:58.376Z",
+        "reason": "Warm paper background is the committed official match-sheet visual direction"
+      }
+    ]
+  }
+}
