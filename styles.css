@@ -11,3 +11,60 @@ dialog{width:min(560px,calc(100% - 30px));padding:28px;border:0;border-radius:16
 
 /* Accessibility floor for dense operational data. */
 .prototype-note{color:#5f6d66;font-size:12px}.brand-lockup small,.sidebar-footer span,.nav-item em,.branch-control label,.live-dot,.page-heading>div>p:first-child,.scoreboard small,.panel-heading p,.bar-chart b,.bar-chart span,.attention-strip button span,.attendance-summary span,.coach-row>div:nth-child(2) span,.status,.text-btn,.branch-compare,.branch-compare .comparison-head,.data-table th,.data-table td,.price-plan small,.payment-list small,.payment-list strong,.session-board span,.roster-row small,.camera-box>span,.contract,.coach-grid dt,.bus-card ul,.capacity-label,.role-badge,.role-summary p,.radio-card small,.month-note,.donut span,.plan-breakdown li,small{font-size:12px!important}.icon-btn b{top:0;right:0;width:20px;height:20px;font-size:11px}.financial-ledger .net span,.financial-ledger .net small{color:#effaf5}.coach-grid h2{margin:0;font-size:1.17em}.page-heading>div>p:first-child:not(#today-date),.edition{display:none}
+
+.notification-wrap{position:relative}
+.notification-panel{position:absolute;z-index:80;top:calc(100% + 12px);left:0;width:min(390px,calc(100vw - 36px));overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 18px 50px rgba(16,36,29,.18)}
+.notification-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.notification-head h2{margin:0;font-size:18px}
+.notification-head p{margin:3px 0 0;color:var(--muted)}
+.notification-head .text-btn{flex:none;padding:4px 0;font-size:11px}
+.notification-head .text-btn:disabled{opacity:.45;cursor:default}
+.notification-list{max-height:min(390px,62vh);overflow:auto;overscroll-behavior:contain}
+.notification-item{display:grid;grid-template-columns:9px minmax(0,1fr);gap:11px;width:100%;padding:14px 20px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);text-align:right;cursor:pointer;transition:background .18s ease}
+.notification-item:last-child{border-bottom:0}
+.notification-item:hover{background:#f5f8f4}
+.notification-item.unread{background:#f4fbf8}
+.notification-item.unread:hover{background:#edf8f2}
+.notification-dot{width:9px;height:9px;margin-top:5px;border-radius:50%;background:var(--muted)}
+.notification-dot.late{background:var(--red)}
+.notification-dot.capacity{background:var(--orange)}
+.notification-dot.new{background:var(--green)}
+.notification-dot.expiry{background:var(--blue)}
+.notification-copy{display:block;min-width:0}
+.notification-copy b,.notification-copy small,.notification-copy em{display:block}
+.notification-copy b{font-size:13px}
+.notification-copy small{margin-top:3px;color:var(--muted);line-height:1.7}
+.notification-copy em{margin-top:5px;color:#9aa59f;font-size:10px;font-style:normal}
+.notification-empty{margin:0;padding:28px 20px;color:var(--muted);text-align:center}
+.pricing-layout{display:grid;grid-template-columns:.82fr 1.18fr;gap:20px;align-items:start}
+.pricing-form-panel,.pricing-preview-panel{padding:24px}
+.pricing-form{margin-top:16px}
+.pricing-form .form-row{gap:12px}
+.pricing-form .btn{width:100%;margin-top:2px}
+.pricing-note{display:flex;gap:10px;margin:0 0 16px;padding:12px;border-radius:10px;background:var(--green-soft);color:#315f4e}
+.pricing-note svg{flex:none;width:22px;height:22px;margin-top:2px}
+.pricing-note p{margin:0;line-height:1.75}
+.pricing-note b{display:block;color:var(--green)}
+.pricing-preview{display:grid;gap:12px}
+.pricing-preview .price-plan{padding:22px;background:#fbfcf9}
+.pricing-preview .price-plan.recommended{background:#f6fbf8}
+.pricing-preview .price-plan strong{font-size:28px}
+.dialog-form .bus-picker-section{display:block;margin:0 0 16px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fafbf8}
+.bus-picker-section legend{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:0 4px;color:var(--ink);font-weight:900}
+#bus-picker-count{flex:none;padding:3px 8px;border-radius:999px;background:#e7f1eb;color:var(--green);font-size:10px;font-weight:900}
+.bus-player-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:210px;margin-top:10px;padding:2px;overflow:auto}
+.dialog-form .bus-player-option{display:flex;align-items:center;gap:9px;min-width:0;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:400;cursor:pointer}
+.dialog-form .bus-player-option:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+.bus-player-option input{flex:none;accent-color:var(--green)}
+.bus-player-option span{min-width:0}
+.bus-player-option b,.bus-player-option small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bus-player-option b{font-size:12px}
+.bus-player-option small{color:var(--muted);font-size:9px}
+.form-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.coach-grid h2{margin:0;font-size:18px}
+.coach-grid article>div:nth-child(2) p{margin:4px 0 0}
+.coach-grid dl>div{padding-bottom:12px}
+.empty-state{padding:28px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);text-align:center}
+@media(max-width:1100px){.pricing-layout{grid-template-columns:1fr}.pricing-preview{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.bus-player-picker{grid-template-columns:1fr}.form-row.three{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.notification-panel{position:fixed;top:64px;right:14px;left:14px;width:auto}.pricing-preview{grid-template-columns:1fr}.pricing-form-panel,.pricing-preview-panel{padding:18px}.form-row.three{grid-template-columns:1fr}}
