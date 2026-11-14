@@ -1,5 +1,6 @@
 const BUS_CAPACITY = 28;
 const SESSION_WEEKDAYS = new Set([0, 3]);
+const NAV_GROUP_PAGES = ['players', 'subscriptions', 'buses'];
 
 const academy = {
   badr: {
@@ -110,10 +111,18 @@ function toast(message) {
   toast.timer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
+function setNavGroupExpanded(expanded) {
+  $('#nav-group-toggle').setAttribute('aria-expanded', String(expanded));
+  $('#nav-group-menu').hidden = !expanded;
+}
+
 function showPage(name) {
   closeNotifications();
   $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === name));
-  $$('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.page === name));
+  $$('.nav-item[data-page]').forEach(item => item.classList.toggle('active', item.dataset.page === name));
+  const inNavGroup = NAV_GROUP_PAGES.includes(name);
+  $('#nav-group-toggle').classList.toggle('child-active', inNavGroup);
+  if (inNavGroup) setNavGroupExpanded(true);
   $('#sidebar').classList.remove('open');
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
@@ -348,7 +357,10 @@ $('#logout-btn').addEventListener('click', () => {
   closeNotifications();
 });
 $('#menu-btn').addEventListener('click', () => $('#sidebar').classList.toggle('open'));
-$$('.nav-item').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
+$('#nav-group-toggle').addEventListener('click', () => {
+  setNavGroupExpanded($('#nav-group-toggle').getAttribute('aria-expanded') !== 'true');
+});
+$$('.nav-item[data-page]').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
 $$('[data-go]').forEach(button => button.addEventListener('click', () => {
   const dialog = button.closest('dialog');
   if (dialog) dialog.close();

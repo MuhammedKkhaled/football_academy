@@ -52,12 +52,17 @@
       <div class="brand-lockup"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>اكاديميه اجيال</strong><small>إدارة الأكاديمية</small></div></div>
       <nav class="main-nav" aria-label="القائمة الرئيسية">
         <button class="nav-item active" data-page="overview"><svg><use href="#i-grid"/></svg><span>نظرة عامة</span></button>
-        <button class="nav-item" data-page="players"><svg><use href="#i-users"/></svg><span>اللاعبون</span><em>248</em></button>
-        <button class="nav-item" data-page="subscriptions"><svg><use href="#i-card"/></svg><span>الاشتراكات</span></button>
+        <div class="nav-group">
+          <button class="nav-item nav-group-toggle" id="nav-group-toggle" type="button" aria-expanded="false" aria-controls="nav-group-menu"><svg><use href="#i-users"/></svg><span>إدارة اللاعبين والاشتراكات والباصات</span></button>
+          <div class="nav-submenu" id="nav-group-menu" hidden>
+            <button class="nav-item" data-page="players"><svg><use href="#i-users"/></svg><span>اللاعبون</span><em>248</em></button>
+            <button class="nav-item" data-page="subscriptions"><svg><use href="#i-card"/></svg><span>الاشتراكات</span></button>
+            <button class="nav-item" data-page="buses"><svg><use href="#i-bus"/></svg><span>الباصات</span><em class="alert-count">2</em></button>
+          </div>
+        </div>
         <button class="nav-item" data-page="pricing"><svg><use href="#i-wallet"/></svg><span>أسعار الاشتراكات</span></button>
         <button class="nav-item" data-page="attendance"><svg><use href="#i-check"/></svg><span>الحضور</span></button>
         <button class="nav-item" data-page="coaches"><svg><use href="#i-coach"/></svg><span>المدربون</span></button>
-        <button class="nav-item" data-page="buses"><svg><use href="#i-bus"/></svg><span>الباصات</span><em class="alert-count">2</em></button>
         <button class="nav-item" data-page="finance"><svg><use href="#i-wallet"/></svg><span>الحسابات والمالية</span></button>
         <button class="nav-item" data-page="extras"><svg><use href="#i-box"/></svg><span>المتنوعات</span></button>
         <button class="nav-item" data-page="roles"><svg><use href="#i-shield"/></svg><span>الأدوار والصلاحيات</span></button>

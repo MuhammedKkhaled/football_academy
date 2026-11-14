@@ -68,3 +68,15 @@ dialog{width:min(560px,calc(100% - 30px));padding:28px;border:0;border-radius:16
 @media(max-width:1100px){.pricing-layout{grid-template-columns:1fr}.pricing-preview{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.bus-player-picker{grid-template-columns:1fr}.form-row.three{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.notification-panel{position:fixed;top:64px;right:14px;left:14px;width:auto}.pricing-preview{grid-template-columns:1fr}.pricing-form-panel,.pricing-preview-panel{padding:18px}.form-row.three{grid-template-columns:1fr}}
+
+/* Sidebar disclosure group for players, subscriptions, and buses. */
+.sidebar{overflow-y:auto}
+.nav-group{display:grid;gap:2px}
+.nav-group-toggle{font-size:13px;line-height:1.35;padding-block:8px}
+.nav-group-toggle span{flex:1}
+.nav-group-toggle::after{content:"";flex:none;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s ease}
+.nav-group-toggle[aria-expanded="true"]::after{transform:rotate(-135deg)}
+.nav-group-toggle.child-active{background:rgba(255,255,255,.06);color:#fff}
+.nav-submenu{display:grid;gap:2px;margin:2px 0 4px;padding-right:26px}
+.nav-submenu .nav-item{min-height:38px;padding:0 10px;font-size:12px}
+.nav-submenu .nav-item svg{width:16px;height:16px}
