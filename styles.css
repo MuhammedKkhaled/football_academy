@@ -135,3 +135,30 @@ dialog{width:min(560px,calc(100% - 30px));padding:28px;border:0;border-radius:16
 .pay-chip.visa{background:#e6eefb;color:#2c5aa0}
 @media(max-width:900px){.closing-summary{grid-template-columns:1fr 1fr}.closing-summary>div+div{border-right:0;border-top:1px solid var(--line)}}
 @media(max-width:760px){.closing-bar{align-items:stretch}.closing-state{justify-content:space-between}.closing-summary{grid-template-columns:1fr}.date-field{flex:1}.date-field input{width:100%}}
+.heading-actions{display:flex;flex-wrap:wrap;gap:9px}
+.payment-preview{margin-bottom:15px;padding:12px 14px;border:1px dashed #c7ddd2;border-radius:10px;background:#f3f9f6;font-size:11px;font-weight:700;line-height:1.9}
+.payment-preview:empty{display:none}
+#payment-remaining[readonly]{background:#eef0eb;color:var(--muted);font-weight:800}
+.due-note{color:#8a5a00;font-weight:800}
+.closing-due{color:#8a5a00;font-weight:800}
+.receipt-dialog{width:min(520px,calc(100% - 30px))}
+.receipt-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:1px dashed var(--line)}
+.receipt-head b,.receipt-head small{display:block}
+.receipt-head b{font-size:20px}
+.receipt-head small{color:var(--muted)}
+.receipt-rows{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin:16px 0}
+.receipt-rows dt{color:var(--muted);font-size:10px}
+.receipt-rows dd{margin:2px 0 0;font-size:12px;font-weight:900}
+.receipt-figures{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.receipt-figures>div{padding:14px;border:1px solid var(--line);border-radius:11px;background:#f6f8f4}
+.receipt-figures span,.receipt-figures strong{display:block}
+.receipt-figures span{color:var(--muted);font-size:10px}
+.receipt-figures strong{margin-top:4px;font-size:19px}
+.receipt-figures .due{border-color:#e6cfa6;background:#fdf6ea}
+.receipt-figures .due strong{color:#8a5a00}
+.receipt-figures .settled{border-color:#c7ddd2;background:#eef8f2}
+.receipt-figures .settled strong{color:var(--green-dark)}
+.receipt-line{margin:0 0 10px;padding:12px 14px;border-radius:10px;background:var(--green-soft);color:var(--green-dark);font-weight:800;line-height:1.9}
+.receipt-note{margin:0;color:var(--muted);font-size:11px}
+.receipt-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+@media(max-width:760px){.receipt-rows,.receipt-figures{grid-template-columns:1fr}.receipt-actions{flex-direction:column}.receipt-actions .btn{width:100%}.heading-actions{width:100%}.heading-actions .btn{flex:1}}

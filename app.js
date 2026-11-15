@@ -43,7 +43,7 @@ const branchRecords = {
     transactions: [['اشتراك يوسف علي','اشتراكات','13 نوفمبر','InstaPay','+1,250 ج.م','in','مؤكد'],['صيانة باص 02','نقل','12 نوفمبر','نقدي','−3,400 ج.م','out','معتمد'],['شراء 12 كرة تدريب','متنوعات','11 نوفمبر','تحويل بنكي','−8,600 ج.م','out','للمراجعة']],
     closings: { [dayKey(-1)]: { admin: 'محمد الصعيدي', at: '9:40 م' } },
     receipts: [
-      { date: dayKey(0), time: '10:20 ص', method: 'انستا باي', amount: 1500, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهري' },
+      { date: dayKey(0), time: '10:20 ص', method: 'انستا باي', amount: 1500, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهري + شنطة', total: 1750, remaining: 250, dueDate: dayKey(7) },
       { date: dayKey(0), time: '11:05 ص', method: 'نقدي', amount: 1250, admin: 'خالد فؤاد', player: 'أحمد هاني', note: 'اشتراك شهري' },
       { date: dayKey(0), time: '12:40 م', method: 'فيزا', amount: 600, admin: 'سارة منصور', player: 'مروان وليد', note: 'تيشيرت الأكاديمية' },
       { date: dayKey(0), time: '1:15 م', method: 'انستا باي', amount: 1250, admin: 'سارة منصور', player: 'مروان وليد', note: 'اشتراك شهري' },
@@ -200,10 +200,12 @@ function renderPlayers() {
   $('#players-table').innerHTML = academy[currentBranch].playersList.map((player, i) => {
     const age = player[9] ? Math.max(0, new Date().getFullYear() - Number(player[9])) : 12 + (i % 3) * 2;
     const planDetail = player[2] === 'بالسيشن' && player[8] ? `<small>${escapeHtml(formatMonth(player[6]))} · ${formatNumber(player[8])} من ${formatNumber(player[7])} سيشن</small>` : '';
+    const outstanding = playerOutstanding(player[0]);
+    const dueNote = outstanding.remaining > 0 ? `<small class="due-note">متبقي ${formatCurrency(outstanding.remaining)} · يستحق ${formatDayLabel(outstanding.dueDate)}</small>` : '';
     const disconnected = isDisconnected(player);
     return `<tr>
     <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${age} سنة</small></div></div></td>
-    <td>${escapeHtml(player[1])}</td><td>${phoneMarkup(player[10])}</td><td><div class="plan-cell"><span>${escapeHtml(player[2])}</span>${planDetail}</div></td><td>${escapeHtml(player[3])}</td><td>${escapeHtml(player[4])}</td>
+    <td>${escapeHtml(player[1])}</td><td>${phoneMarkup(player[10])}</td><td><div class="plan-cell"><span>${escapeHtml(player[2])}</span>${planDetail}${dueNote}</div></td><td>${escapeHtml(player[3])}</td><td>${escapeHtml(player[4])}</td>
     <td><div class="status-stack"><span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span>${disconnected ? '<span class="status disconnected">منقطع</span>' : ''}</div></td></tr>`;
   }).join('');
 }
@@ -242,12 +244,127 @@ function methodSlug(method) {
   return method === 'انستا باي' ? 'instapay' : method === 'فيزا' ? 'visa' : 'cash';
 }
 
+function playerOutstanding(playerName) {
+  const records = branchRecords[currentBranch];
+  let latest = null;
+  records.receipts.forEach(item => {
+    if (item.player === playerName && typeof item.remaining === 'number') latest = item;
+  });
+  return {
+    remaining: latest ? Math.max(0, Number(latest.remaining)) : 0,
+    dueDate: latest && latest.dueDate ? latest.dueDate : '',
+    total: latest ? Number(latest.total || 0) : 0,
+    receipt: latest
+  };
+}
+
+function closingDueTotal(list) {
+  return [...new Set(list.map(item => item.player))]
+    .reduce((sum, name) => sum + playerOutstanding(name).remaining, 0);
+}
+
+function closingDueFor(item) {
+  const outstanding = playerOutstanding(item.player);
+  return outstanding.receipt === item && outstanding.remaining > 0 ? outstanding.remaining : 0;
+}
+
+function paymentPlayer() {
+  const select = $('#payment-player');
+  if (!select) return null;
+  return academy[currentBranch].playersList.find(player => player[1] === select.value) || null;
+}
+
+function fillPaymentDefaults() {
+  const player = paymentPlayer();
+  if (!player) return;
+  const plans = academy[currentBranch].plans;
+  const outstanding = playerOutstanding(player[0]);
+  if (outstanding.remaining > 0) {
+    $('#payment-total').value = outstanding.remaining;
+    $('#payment-hint').textContent = outstanding.dueDate
+      ? `متبقي من دفعة سابقة مستحق يوم ${formatDayLabel(outstanding.dueDate)}.`
+      : 'متبقي من دفعة سابقة.';
+    return;
+  }
+  const total = player[2] === 'بالسيشن' ? plans.session * (Number(player[7]) || 8) : plans.monthly;
+  $('#payment-total').value = total;
+  $('#payment-hint').textContent = player[2] === 'بالسيشن'
+    ? 'اشتراك بالسيشن: سعر السيشن × سيشنات الشهر.'
+    : `سعر الاشتراك الشهري في ${academy[currentBranch].name}.`;
+}
+
+function updatePaymentPreview() {
+  const total = Number($('#payment-total').value) || 0;
+  const paid = Number($('#payment-paid').value) || 0;
+  const remaining = Math.max(0, total - paid);
+  const due = $('#payment-due');
+  const needsDue = paid > 0 && remaining > 0;
+  $('#payment-remaining').value = remaining;
+  due.disabled = !needsDue;
+  due.required = needsDue;
+  due.min = shiftDay(dayKey(0), 1);
+  if (!needsDue) {
+    due.value = '';
+  } else if (!due.value || due.value <= dayKey(0)) {
+    due.value = shiftDay(dayKey(0), 7);
+  }
+  $('#payment-preview').textContent = paid > 0
+    ? `تم دفع ${formatCurrency(paid)}${remaining > 0 ? ` ومتبقي ${formatCurrency(remaining)} يستحق ${formatDayLabel(due.value)}` : ' وسداد كامل'}.`
+    : 'أدخل المبلغ المدفوع لعرض نص الإيصال.';
+}
+
+function preparePaymentDialog() {
+  const players = academy[currentBranch].playersList;
+  $('#payment-player').innerHTML = players.map(player => `<option value="${escapeHtml(player[1])}">${escapeHtml(player[0])} — ${escapeHtml(player[1])}</option>`).join('');
+  $('#payment-paid').value = '';
+  $('#payment-due').value = '';
+  fillPaymentDefaults();
+  updatePaymentPreview();
+}
+
+let lastReceipt = null;
+
+function receiptText(receipt) {
+  const remaining = Number(receipt.remaining || 0);
+  return [
+    'إيصال استلام دفعة',
+    `الفرع: ${academy[currentBranch].name}`,
+    `اللاعب: ${receipt.player}`,
+    `التاريخ: ${formatDayLabel(receipt.date)} · ${receipt.time}`,
+    `طريقة الدفع: ${receipt.method}`,
+    `قيمة الاشتراك: ${formatCurrency(receipt.total)}`,
+    remaining > 0
+      ? `تم دفع مبلغ ${formatCurrency(receipt.amount)} ومتبقي مبلغ ${formatCurrency(remaining)} وميعاد دفعه يوم ${formatDayLabel(receipt.dueDate)}`
+      : `تم دفع مبلغ ${formatCurrency(receipt.amount)} وتم سداد الاشتراك بالكامل`,
+    `الإداري المستلم: ${receipt.admin}`
+  ].join('\n');
+}
+
+function receiptMarkup(receipt) {
+  const remaining = Number(receipt.remaining || 0);
+  const dueLine = remaining > 0
+    ? ` ومتبقي مبلغ <b>${formatCurrency(remaining)}</b> وميعاد دفعه يوم <b>${formatDayLabel(receipt.dueDate)}</b>`
+    : ' وتم سداد الاشتراك بالكامل';
+  return `<header class="receipt-head"><div><b>إيصال استلام دفعة</b><small>${escapeHtml(academy[currentBranch].name)}${receipt.no ? ` · ${escapeHtml(receipt.no)}` : ''}</small></div><span class="pay-chip ${methodSlug(receipt.method)}">${escapeHtml(receipt.method)}</span></header>
+    <dl class="receipt-rows"><div><dt>اللاعب</dt><dd>${escapeHtml(receipt.player)}</dd></div><div><dt>التاريخ</dt><dd>${formatDayLabel(receipt.date)} · ${escapeHtml(receipt.time)}</dd></div><div><dt>الإداري المستلم</dt><dd>${escapeHtml(receipt.admin)}</dd></div><div><dt>قيمة الاشتراك</dt><dd>${formatCurrency(receipt.total)}</dd></div></dl>
+    <div class="receipt-figures"><div><span>تم دفع</span><strong>${formatCurrency(receipt.amount)}</strong></div><div class="${remaining > 0 ? 'due' : 'settled'}"><span>${remaining > 0 ? 'متبقي' : 'الحالة'}</span><strong>${remaining > 0 ? formatCurrency(remaining) : 'مسدد بالكامل'}</strong></div></div>
+    <p class="receipt-line">تم دفع مبلغ <b>${formatCurrency(receipt.amount)}</b>${dueLine}.</p>
+    <p class="receipt-note">${escapeHtml(receipt.note)}</p>`;
+}
+
+function openReceipt(receipt) {
+  lastReceipt = receipt;
+  $('#receipt-body').innerHTML = receiptMarkup(receipt);
+  $('#receipt-dialog').showModal();
+}
+
 function renderClosing() {
   const branchName = academy[currentBranch].name;
   const records = branchRecords[currentBranch];
   const today = dayKey(0);
   const receipts = records.receipts.filter(item => item.date === closingDate);
   const total = receipts.reduce((sum, item) => sum + item.amount, 0);
+  const dueTotal = closingDueTotal(receipts);
   const closing = records.closings[closingDate];
 
   $('#closing-date').value = closingDate;
@@ -256,7 +373,9 @@ function renderClosing() {
   $('#closing-today').disabled = closingDate === today;
   $('#closing-day-label').textContent = formatDayLabel(closingDate);
   $('#closing-total').textContent = formatCurrency(total);
-  $('#closing-count').textContent = `${formatNumber(receipts.length)} عملية`;
+  $('#closing-count').textContent = dueTotal > 0
+    ? `${formatNumber(receipts.length)} عملية · متبقي ${formatCurrency(dueTotal)}`
+    : `${formatNumber(receipts.length)} عملية`;
 
   PAY_METHODS.forEach(method => {
     const rows = receipts.filter(item => item.method === method.name);
@@ -282,7 +401,7 @@ function renderClosing() {
 
   $('#closing-table').innerHTML = receipts.length ? receipts.map(item => `<tr>
       <td>${escapeHtml(item.time)}</td>
-      <td><div class="closing-cell"><b>${escapeHtml(item.player)}</b><small>${escapeHtml(item.note)}</small></div></td>
+      <td><div class="closing-cell"><b>${escapeHtml(item.player)}</b><small>${escapeHtml(item.note)}</small>${closingDueFor(item) ? `<small class="closing-due">متبقي ${formatCurrency(item.remaining)} · يستحق ${formatDayLabel(item.dueDate)}</small>` : ''}</div></td>
       <td><span class="pay-chip ${methodSlug(item.method)}">${escapeHtml(item.method)}</span></td>
       <td class="money in">+${formatCurrency(item.amount)}</td>
       <td>${escapeHtml(item.admin)}</td>
@@ -592,10 +711,11 @@ $('#closing-export').addEventListener('click', () => {
     ['اليوم', formatDayLabel(closingDate)],
     ['الحالة', closing ? `مقفل — ${closing.admin} — ${closing.at}` : 'مفتوح'],
     [],
-    ['الوقت', 'البيان', 'ملاحظة', 'طريقة الدفع', 'المبلغ', 'الإداري', 'الفرع', 'التاريخ'],
-    ...receipts.map(item => [item.time, item.player, item.note, item.method, item.amount, item.admin, branchName, item.date]),
+    ['الوقت', 'البيان', 'ملاحظة', 'طريقة الدفع', 'المبلغ', 'المتبقي', 'تاريخ الاستحقاق', 'الإداري', 'الفرع', 'التاريخ'],
+    ...receipts.map(item => [item.time, item.player, item.note, item.method, item.amount, item.remaining > 0 ? item.remaining : '', item.remaining > 0 ? item.dueDate : '', item.admin, branchName, item.date]),
     [],
-    ['إجمالي المقبوضات', receipts.reduce((sum, item) => sum + item.amount, 0)]
+    ['إجمالي المقبوضات', receipts.reduce((sum, item) => sum + item.amount, 0)],
+    ['إجمالي المتبقي', receipts.reduce((sum, item) => sum + (item.remaining > 0 ? item.remaining : 0), 0)]
   ]);
 });
 $('#closing-close-btn').addEventListener('click', () => {
@@ -663,6 +783,69 @@ $('#subscription-form').addEventListener('submit', event => {
   toast('تم إنشاء الاشتراك التجريبي بنجاح');
 });
 $$('input[name="plan"]').forEach(input => input.addEventListener('change', updateSubscriptionNote));
+
+$$('[data-open="payment-dialog"]').forEach(button => button.addEventListener('click', preparePaymentDialog));
+$('#payment-player').addEventListener('change', () => {
+  fillPaymentDefaults();
+  updatePaymentPreview();
+});
+['#payment-total', '#payment-paid', '#payment-due'].forEach(selector => {
+  $(selector).addEventListener('input', updatePaymentPreview);
+  $(selector).addEventListener('change', updatePaymentPreview);
+});
+
+$('#payment-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.target;
+  const records = branchRecords[currentBranch];
+  const player = paymentPlayer();
+  const total = Number(form.elements.total.value);
+  const paid = Number(form.elements.paid.value);
+  const method = form.elements.method.value;
+  if (!player) return toast('اختر لاعبًا من القائمة');
+  if (!Number.isFinite(total) || total <= 0) return toast('أدخل قيمة اشتراك صحيحة');
+  if (!Number.isFinite(paid) || paid <= 0) return toast('أدخل مبلغًا مدفوعًا أكبر من صفر');
+  if (paid > total) return toast('المبلغ المدفوع أكبر من قيمة الاشتراك');
+  const remaining = total - paid;
+  const dueDate = remaining > 0 ? form.elements.dueDate.value : '';
+  if (remaining > 0 && !dueDate) return toast('اختر تاريخ استحقاق المتبقي');
+  if (remaining > 0 && dueDate <= dayKey(0)) return toast('تاريخ استحقاق المتبقي يجب أن يكون بعد اليوم');
+
+  const receipt = {
+    date: dayKey(0),
+    time: new Date().toLocaleTimeString('ar-EG-u-nu-latn', { hour: '2-digit', minute: '2-digit' }),
+    method,
+    amount: paid,
+    admin: 'محمد الصعيدي',
+    player: player[0],
+    note: remaining > 0 ? `اشتراك — دفعة جزئية من ${formatCurrency(total)}` : 'سداد اشتراك بالكامل',
+    total,
+    remaining,
+    dueDate,
+    no: `R-${currentBranch === 'badr' ? 'BD' : 'SH'}-${1001 + records.receipts.length}`
+  };
+  records.receipts.push(receipt);
+  if (remaining > 0) {
+    records.payments.unshift([initials(player[0]), player[0], `متبقي ${formatCurrency(remaining)} — يستحق ${formatDayLabel(dueDate)}`, formatCurrency(remaining)]);
+    if (records.payments.length > 4) records.payments.length = 4;
+  }
+  closingDate = dayKey(0);
+  form.closest('dialog').close();
+  renderBranch();
+  form.reset();
+  openReceipt(receipt);
+  toast(`تم تسجيل دفعة ${formatCurrency(paid)} من ${player[0]}`);
+});
+
+$('#receipt-copy').addEventListener('click', async () => {
+  if (!lastReceipt) return;
+  try {
+    await navigator.clipboard.writeText(receiptText(lastReceipt));
+    toast('تم نسخ نص الإيصال');
+  } catch {
+    toast('تعذر النسخ من المتصفح');
+  }
+});
 
 function adjustAbsence(code, delta) {
   const record = academy[currentBranch].playersList.find(item => item[1] === code);
