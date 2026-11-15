@@ -1,10 +1,11 @@
 const BUS_CAPACITY = 28;
 const SESSION_WEEKDAYS = new Set([0, 3]);
-const NAV_GROUP_PAGES = ['players', 'subscriptions', 'buses'];
+const ABSENCE_LIMIT = 5;
+const NAV_GROUP_PAGES = ['players', 'disconnected', 'subscriptions', 'buses'];
 
 const academy = {
   badr: {
-    name: 'فرع بدر', players: 148, active: 132, collection: '86%', collected: '325,400 ج.م', seats: 7,
+    name: 'فرع بدر', players: 148, active: 132, collection: '86%', collected: '325,400 ج.م', seats: 7, absenceLimit: ABSENCE_LIMIT,
     plans: { monthly: 1250, session: 180, monthlyCount: 95, sessionCount: 37, paused: 16 },
     attendance: { players: 34, coaches: '4/5', rate: '91%' }, finance: { income: '325,400 ج.م', expenses: '184,700 ج.م', net: '140,700 ج.م' },
     buses: [
@@ -13,10 +14,10 @@ const academy = {
       { name: 'باص 03', route: 'المنطقة 03 ← النادي', supervisor: 'وليد رجب', driver: 'مصطفى كمال', fee: 950, count: 21, players: ['BD-1652'] }
     ],
     extras: [['حذاء تدريب Academy Pro','ملابس ومعدات',1850,14],['تيشيرت الأكاديمية','الزي الرسمي',450,32],['شنطة التدريب','ملابس ومعدات',620,9],['اشتراك الباص','نقل شهري',850,18]],
-    playersList: [['يوسف علي','BD-1842','شهري','92%','باص 01','نشط'],['زياد محمد','BD-1791','بالسيشن','86%','باص 02','متأخر'],['أحمد هاني','BD-1755','شهري','96%','باص 02','نشط'],['مروان وليد','BD-1698','شهري','88%','بدون باص','نشط'],['سليم خالد','BD-1652','بالسيشن','79%','باص 03','متأخر']]
+    playersList: [['يوسف علي','BD-1842','شهري','92%','باص 01','نشط', '', '', '', 2012, '01012345678', 0],['زياد محمد','BD-1791','بالسيشن','86%','باص 02','متأخر', '', '', '', 2011, '01123456789', 6],['أحمد هاني','BD-1755','شهري','96%','باص 02','نشط', '', '', '', 2010, '01234567890', 1],['مروان وليد','BD-1698','شهري','88%','بدون باص','نشط', '', '', '', 2013, '01098765432', 5],['سليم خالد','BD-1652','بالسيشن','79%','باص 03','متأخر', '', '', '', 2012, '01187654321', 3]]
   },
   shorouk: {
-    name: 'فرع الشروق', players: 100, active: 82, collection: '78%', collected: '218,900 ج.م', seats: 16,
+    name: 'فرع الشروق', players: 100, active: 82, collection: '78%', collected: '218,900 ج.م', seats: 16, absenceLimit: ABSENCE_LIMIT,
     plans: { monthly: 1450, session: 210, monthlyCount: 61, sessionCount: 21, paused: 18 },
     attendance: { players: 27, coaches: '3/4', rate: '84%' }, finance: { income: '218,900 ج.م', expenses: '139,200 ج.م', net: '79,700 ج.م' },
     buses: [
@@ -25,7 +26,7 @@ const academy = {
       { name: 'باص 03', route: 'المنطقة 03 ← النادي', supervisor: 'طارق عبد العال', driver: 'شريف نبيل', fee: 1050, count: 18, players: ['SH-1188'] }
     ],
     extras: [['حذاء تدريب Academy Pro','ملابس ومعدات',2050,8],['تيشيرت الأكاديمية','الزي الرسمي',500,24],['شنطة التدريب','ملابس ومعدات',690,15],['اشتراك الباص','نقل شهري',950,23]],
-    playersList: [['آدم شريف','SH-1204','شهري','94%','باص 01','نشط'],['عمر ياسر','SH-1188','بالسيشن','82%','باص 03','نشط'],['سيف حازم','SH-1152','شهري','77%','باص 02','متأخر'],['علي أحمد','SH-1097','شهري','90%','بدون باص','نشط'],['نديم وائل','SH-1021','بالسيشن','73%','باص 01','متأخر']]
+    playersList: [['آدم شريف','SH-1204','شهري','94%','باص 01','نشط', '', '', '', 2011, '01055512345', 0],['عمر ياسر','SH-1188','بالسيشن','82%','باص 03','نشط', '', '', '', 2012, '01155512345', 2],['سيف حازم','SH-1152','شهري','77%','باص 02','متأخر', '', '', '', 2010, '01255512345', 5],['علي أحمد','SH-1097','شهري','90%','بدون باص','نشط', '', '', '', 2013, '01055598765', 1],['نديم وائل','SH-1021','بالسيشن','73%','باص 01','متأخر', '', '', '', 2011, '01155598765', 7]]
   }
 };
 
@@ -39,7 +40,24 @@ const branchRecords = {
       { name: 'أحمد علاء', role: 'لياقة بدنية', contract: 'part', sessionRate: 500, sessions: 12, overtimeRate: 600 }
     ],
     payments: [['ي ع','يوسف علي','متأخر 9 أيام','1,250 ج.م'],['ز م','زياد محمد','متأخر 6 أيام','900 ج.م'],['م و','مروان وليد','يستحق اليوم','1,250 ج.م']],
-    transactions: [['اشتراك يوسف علي','اشتراكات','13 نوفمبر','InstaPay','+1,250 ج.م','in','مؤكد'],['صيانة باص 02','نقل','12 نوفمبر','نقدي','−3,400 ج.م','out','معتمد'],['شراء 12 كرة تدريب','متنوعات','11 نوفمبر','تحويل بنكي','−8,600 ج.م','out','للمراجعة']]
+    transactions: [['اشتراك يوسف علي','اشتراكات','13 نوفمبر','InstaPay','+1,250 ج.م','in','مؤكد'],['صيانة باص 02','نقل','12 نوفمبر','نقدي','−3,400 ج.م','out','معتمد'],['شراء 12 كرة تدريب','متنوعات','11 نوفمبر','تحويل بنكي','−8,600 ج.م','out','للمراجعة']],
+    closings: { [dayKey(-1)]: { admin: 'محمد الصعيدي', at: '9:40 م' } },
+    receipts: [
+      { date: dayKey(0), time: '10:20 ص', method: 'انستا باي', amount: 1500, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهري' },
+      { date: dayKey(0), time: '11:05 ص', method: 'نقدي', amount: 1250, admin: 'خالد فؤاد', player: 'أحمد هاني', note: 'اشتراك شهري' },
+      { date: dayKey(0), time: '12:40 م', method: 'فيزا', amount: 600, admin: 'سارة منصور', player: 'مروان وليد', note: 'تيشيرت الأكاديمية' },
+      { date: dayKey(0), time: '1:15 م', method: 'انستا باي', amount: 1250, admin: 'سارة منصور', player: 'مروان وليد', note: 'اشتراك شهري' },
+      { date: dayKey(0), time: '3:30 م', method: 'نقدي', amount: 1000, admin: 'خالد فؤاد', player: 'سليم خالد', note: 'اشتراك باص' },
+      { date: dayKey(0), time: '4:10 م', method: 'انستا باي', amount: 1000, admin: 'محمد الصعيدي', player: 'زياد محمد', note: 'دفعة متأخرة' },
+      { date: dayKey(0), time: '5:20 م', method: 'فيزا', amount: 400, admin: 'سارة منصور', player: 'فارس عماد', note: 'شنطة التدريب' },
+      { date: dayKey(0), time: '6:05 م', method: 'نقدي', amount: 750, admin: 'خالد فؤاد', player: 'لاعب زائر', note: 'سيشن تجريبي' },
+      { date: dayKey(0), time: '7:15 م', method: 'انستا باي', amount: 1000, admin: 'خالد فؤاد', player: 'ولي أمر — أحمد هاني', note: 'اشتراك باص' },
+      { date: dayKey(0), time: '8:40 م', method: 'انستا باي', amount: 1250, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهر قادم' },
+      { date: dayKey(-1), time: '10:10 ص', method: 'انستا باي', amount: 1250, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهري' },
+      { date: dayKey(-1), time: '12:30 م', method: 'نقدي', amount: 1000, admin: 'خالد فؤاد', player: 'سليم خالد', note: 'اشتراك باص' },
+      { date: dayKey(-1), time: '4:45 م', method: 'انستا باي', amount: 950, admin: 'خالد فؤاد', player: 'أحمد هاني', note: 'اشتراك باص' },
+      { date: dayKey(-1), time: '6:20 م', method: 'فيزا', amount: 500, admin: 'سارة منصور', player: 'فارس عماد', note: 'متنوعات' }
+    ]
   },
   shorouk: {
     attendance: [{name:'آدم شريف',code:'SH-1204',present:true},{name:'عمر ياسر',code:'SH-1188',present:true},{name:'سيف حازم',code:'SH-1152',present:false},{name:'علي أحمد',code:'SH-1097',present:true},{name:'نديم وائل',code:'SH-1021',present:false},{name:'ياسين تامر',code:'SH-0994',present:true}],
@@ -50,7 +68,19 @@ const branchRecords = {
       { name: 'ياسر كمال', role: 'مدرب مهارات', contract: 'part', sessionRate: 430, sessions: 10, overtimeRate: 520 }
     ],
     payments: [['س ح','سيف حازم','متأخر 7 أيام','1,450 ج.م'],['ن و','نديم وائل','متأخر 3 أيام','1,050 ج.م'],['ع أ','علي أحمد','يستحق غدًا','1,450 ج.م']],
-    transactions: [['اشتراك آدم شريف','اشتراكات','13 نوفمبر','بطاقة بنكية','+1,450 ج.م','in','مؤكد'],['وقود باص 01','نقل','12 نوفمبر','نقدي','−2,100 ج.م','out','معتمد'],['شراء أطقم تدريب','متنوعات','10 نوفمبر','تحويل بنكي','−6,250 ج.م','out','للمراجعة']]
+    transactions: [['اشتراك آدم شريف','اشتراكات','13 نوفمبر','بطاقة بنكية','+1,450 ج.م','in','مؤكد'],['وقود باص 01','نقل','12 نوفمبر','نقدي','−2,100 ج.م','out','معتمد'],['شراء أطقم تدريب','متنوعات','10 نوفمبر','تحويل بنكي','−6,250 ج.م','out','للمراجعة']],
+    closings: {},
+    receipts: [
+      { date: dayKey(0), time: '9:50 ص', method: 'انستا باي', amount: 1450, admin: 'منى عادل', player: 'آدم شريف', note: 'اشتراك شهري' },
+      { date: dayKey(0), time: '11:30 ص', method: 'نقدي', amount: 1000, admin: 'منى عادل', player: 'عمر ياسر', note: 'اشتراك باص' },
+      { date: dayKey(0), time: '1:00 م', method: 'فيزا', amount: 500, admin: 'سارة منصور', player: 'سيف حازم', note: 'متنوعات' },
+      { date: dayKey(0), time: '2:20 م', method: 'انستا باي', amount: 1450, admin: 'منى عادل', player: 'علي أحمد', note: 'اشتراك شهري' },
+      { date: dayKey(0), time: '5:10 م', method: 'نقدي', amount: 650, admin: 'منى عادل', player: 'نديم وائل', note: 'دفعة متأخرة' },
+      { date: dayKey(0), time: '7:00 م', method: 'انستا باي', amount: 1450, admin: 'منى عادل', player: 'آدم شريف', note: 'اشتراك شهر قادم' },
+      { date: dayKey(-1), time: '11:00 ص', method: 'انستا باي', amount: 1450, admin: 'منى عادل', player: 'آدم شريف', note: 'اشتراك شهري' },
+      { date: dayKey(-1), time: '3:15 م', method: 'نقدي', amount: 900, admin: 'منى عادل', player: 'عمر ياسر', note: 'اشتراك باص' },
+      { date: dayKey(-1), time: '6:30 م', method: 'نقدي', amount: 500, admin: 'منى عادل', player: 'نديم وائل', note: 'متنوعات' }
+    ]
   }
 };
 
@@ -69,6 +99,7 @@ const notifications = {
 };
 
 let currentBranch = 'badr';
+let closingDate = dayKey(0);
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const icon = id => `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
@@ -80,6 +111,29 @@ const initials = name => String(name || '').trim().split(/\s+/).slice(0, 2).map(
 function currentMonthValue() {
   const date = new Date();
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function dayKeyFromDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function dayKey(offset = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + offset);
+  return dayKeyFromDate(date);
+}
+
+function shiftDay(key, delta) {
+  const [year, month, day] = String(key).split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + delta);
+  return dayKeyFromDate(date);
+}
+
+function formatDayLabel(key) {
+  const [year, month, day] = String(key).split('-').map(Number);
+  if (!year || !month || !day) return '';
+  return new Intl.DateTimeFormat('ar-EG-u-nu-latn', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(year, month - 1, day));
 }
 
 function getMonthInfo(value) {
@@ -132,15 +186,107 @@ function planCardsMarkup(plans) {
   return `<article class="price-plan recommended"><span>اشتراك شهري</span><strong>${formatNumber(plans.monthly)} <small>ج.م / شهر</small></strong><b>الأكثر اختيارًا</b><small>قيمة ثابتة مهما كان الشهر 28 أو 30 أو 31 يومًا.</small></article><article class="price-plan"><span>اشتراك بالسيشن</span><strong>${formatNumber(plans.session)} <small>ج.م / سيشن</small></strong><b>${monthInfo ? `${monthInfo.total} سيشن في ${monthInfo.label}` : 'سيشنان أسبوعيًا'}</b><small>سيشنان كل أسبوع، ويُحسب عدد السيشنات الفعلي حسب الشهر.</small></article>`;
 }
 
+function isDisconnected(player) {
+  return Number(player[11] || 0) >= Number(academy[currentBranch].absenceLimit || ABSENCE_LIMIT);
+}
+
+function phoneMarkup(phone) {
+  const value = String(phone || '').trim();
+  if (!value) return '<span class="phone-empty">—</span>';
+  return `<a class="phone-link" href="tel:${escapeHtml(value)}">${escapeHtml(value)}</a>`;
+}
+
 function renderPlayers() {
   $('#players-table').innerHTML = academy[currentBranch].playersList.map((player, i) => {
     const age = player[9] ? Math.max(0, new Date().getFullYear() - Number(player[9])) : 12 + (i % 3) * 2;
     const planDetail = player[2] === 'بالسيشن' && player[8] ? `<small>${escapeHtml(formatMonth(player[6]))} · ${formatNumber(player[8])} من ${formatNumber(player[7])} سيشن</small>` : '';
+    const disconnected = isDisconnected(player);
     return `<tr>
     <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${age} سنة</small></div></div></td>
-    <td>${escapeHtml(player[1])}</td><td><div class="plan-cell"><span>${escapeHtml(player[2])}</span>${planDetail}</div></td><td>${escapeHtml(player[3])}</td><td>${escapeHtml(player[4])}</td>
-    <td><span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span></td></tr>`;
+    <td>${escapeHtml(player[1])}</td><td>${phoneMarkup(player[10])}</td><td><div class="plan-cell"><span>${escapeHtml(player[2])}</span>${planDetail}</div></td><td>${escapeHtml(player[3])}</td><td>${escapeHtml(player[4])}</td>
+    <td><div class="status-stack"><span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span>${disconnected ? '<span class="status disconnected">منقطع</span>' : ''}</div></td></tr>`;
   }).join('');
+}
+
+function renderDisconnected() {
+  const branch = academy[currentBranch];
+  const limit = Number(branch.absenceLimit || ABSENCE_LIMIT);
+  const players = branch.playersList.map((player, i) => ({ player, i })).filter(item => isDisconnected(item.player));
+  const maxAbsence = branch.playersList.reduce((max, player) => Math.max(max, Number(player[11] || 0)), 0);
+  $('#absence-limit').value = limit;
+  $('#absence-limit-display').textContent = formatNumber(limit);
+  $('#disconnected-count').textContent = formatNumber(players.length);
+  $('#max-absence').textContent = formatNumber(maxAbsence);
+  const badge = $('#disconnected-nav-count');
+  badge.textContent = formatNumber(players.length);
+  badge.hidden = players.length === 0;
+  $('#disconnected-table').innerHTML = players.length ? players.map(({ player, i }) => {
+    const absences = Number(player[11] || 0);
+    return `<tr data-player-code="${escapeHtml(player[1])}">
+      <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${escapeHtml(player[1])}</small></div></div></td>
+      <td>${escapeHtml(player[1])}</td>
+      <td>${phoneMarkup(player[10])}</td>
+      <td>${escapeHtml(player[2])}</td>
+      <td><span class="status disconnected">${formatNumber(absences)} غياب</span></td>
+      <td><div class="absence-actions"><a class="btn btn-quiet btn-small" href="tel:${escapeHtml(player[10] || '')}">${icon('i-phone')} اتصال</a><button class="btn btn-primary btn-small" type="button" data-reactivate="${escapeHtml(player[1])}">إعادة تفعيل</button></div></td></tr>`;
+  }).join('') : '<tr><td colspan="6"><div class="empty-state">لا يوجد لاعبون منقطعون عند الحد الحالي.</div></td></tr>';
+}
+
+const PAY_METHODS = [
+  { name: 'انستا باي', slug: 'instapay', amount: '#closing-instapay-amount', count: '#closing-instapay-count' },
+  { name: 'نقدي', slug: 'cash', amount: '#closing-cash-amount', count: '#closing-cash-count' },
+  { name: 'فيزا', slug: 'visa', amount: '#closing-visa-amount', count: '#closing-visa-count' }
+];
+
+function methodSlug(method) {
+  return method === 'انستا باي' ? 'instapay' : method === 'فيزا' ? 'visa' : 'cash';
+}
+
+function renderClosing() {
+  const branchName = academy[currentBranch].name;
+  const records = branchRecords[currentBranch];
+  const today = dayKey(0);
+  const receipts = records.receipts.filter(item => item.date === closingDate);
+  const total = receipts.reduce((sum, item) => sum + item.amount, 0);
+  const closing = records.closings[closingDate];
+
+  $('#closing-date').value = closingDate;
+  $('#closing-date').max = today;
+  $('#closing-next').disabled = closingDate >= today;
+  $('#closing-today').disabled = closingDate === today;
+  $('#closing-day-label').textContent = formatDayLabel(closingDate);
+  $('#closing-total').textContent = formatCurrency(total);
+  $('#closing-count').textContent = `${formatNumber(receipts.length)} عملية`;
+
+  PAY_METHODS.forEach(method => {
+    const rows = receipts.filter(item => item.method === method.name);
+    $(method.amount).textContent = formatCurrency(rows.reduce((sum, item) => sum + item.amount, 0));
+    $(method.count).textContent = formatNumber(rows.length);
+  });
+
+  const status = $('#closing-status');
+  const button = $('#closing-close-btn');
+  if (closing) {
+    status.textContent = 'مقفل';
+    status.className = 'status closed';
+    $('#closing-status-text').textContent = `تم التقفيل بواسطة ${closing.admin} · ${closing.at}`;
+    button.innerHTML = `${icon('i-lock')} إعادة فتح اليوم`;
+    button.className = 'btn btn-secondary';
+  } else {
+    status.textContent = 'مفتوح';
+    status.className = 'status open';
+    $('#closing-status-text').textContent = 'اليوم قيد التحصيل ولم يتم تقفيله بعد';
+    button.innerHTML = `${icon('i-lock')} تقفيل اليوم`;
+    button.className = 'btn btn-primary';
+  }
+
+  $('#closing-table').innerHTML = receipts.length ? receipts.map(item => `<tr>
+      <td>${escapeHtml(item.time)}</td>
+      <td><div class="closing-cell"><b>${escapeHtml(item.player)}</b><small>${escapeHtml(item.note)}</small></div></td>
+      <td><span class="pay-chip ${methodSlug(item.method)}">${escapeHtml(item.method)}</span></td>
+      <td class="money in">+${formatCurrency(item.amount)}</td>
+      <td>${escapeHtml(item.admin)}</td>
+      <td>${escapeHtml(branchName)}</td></tr>`).join('') : '<tr><td colspan="6"><div class="empty-state">لا توجد مقبوضات مسجلة في هذا اليوم.</div></td></tr>';
 }
 
 function renderPlans() {
@@ -211,6 +357,8 @@ function renderBranch() {
   $('#finance-expenses').textContent = b.finance.expenses;
   $('#finance-net').textContent = b.finance.net;
   renderPlayers();
+  renderDisconnected();
+  renderClosing();
   renderPlans();
   renderPricing();
   renderBuses();
@@ -384,18 +532,107 @@ $('#player-search').addEventListener('input', event => {
   const query = event.target.value.trim();
   $$('#players-table tr').forEach(row => row.hidden = !row.textContent.includes(query));
 });
+$('#disconnected-search').addEventListener('input', event => {
+  const query = event.target.value.trim();
+  $$('#disconnected-table tr').forEach(row => row.hidden = !row.textContent.includes(query));
+});
+$('#absence-limit').addEventListener('change', event => {
+  const value = Math.min(20, Math.max(1, Number(event.target.value) || ABSENCE_LIMIT));
+  academy[currentBranch].absenceLimit = value;
+  event.target.value = value;
+  renderDisconnected();
+  renderPlayers();
+  toast(`تم ضبط حد الانقطاع على ${formatNumber(value)} غياب في ${academy[currentBranch].name}`);
+});
+$('#disconnected-table').addEventListener('click', event => {
+  const button = event.target.closest('[data-reactivate]');
+  if (!button) return;
+  const record = academy[currentBranch].playersList.find(player => player[1] === button.dataset.reactivate);
+  if (!record) return;
+  record[11] = 0;
+  renderDisconnected();
+  renderPlayers();
+  toast(`تمت إعادة تفعيل ${record[0]} وتصفير عدد الغياب`);
+});
+$('#disconnected-export').addEventListener('click', () => {
+  const rows = academy[currentBranch].playersList.filter(isDisconnected).map(player => [player[0], player[1], player[10] || '', player[2], player[11] || 0]);
+  downloadCsv(`disconnected-${currentBranch}.csv`, [['اللاعب','الكود','ولي الأمر','الاشتراك','مرات الغياب'], ...rows]);
+});
+
+$('#closing-date').addEventListener('change', event => {
+  if (!event.target.value) return;
+  closingDate = event.target.value;
+  renderClosing();
+});
+$('#closing-prev').addEventListener('click', () => {
+  closingDate = shiftDay(closingDate, -1);
+  renderClosing();
+});
+$('#closing-next').addEventListener('click', () => {
+  if (closingDate >= dayKey(0)) return;
+  closingDate = shiftDay(closingDate, 1);
+  renderClosing();
+});
+$('#closing-today').addEventListener('click', () => {
+  closingDate = dayKey(0);
+  renderClosing();
+});
+$('#closing-search').addEventListener('input', event => {
+  const query = event.target.value.trim();
+  $$('#closing-table tr').forEach(row => row.hidden = !row.textContent.includes(query));
+});
+$('#closing-export').addEventListener('click', () => {
+  const branchName = academy[currentBranch].name;
+  const records = branchRecords[currentBranch];
+  const receipts = records.receipts.filter(item => item.date === closingDate);
+  const closing = records.closings[closingDate];
+  downloadCsv(`closing-${currentBranch}-${closingDate}.csv`, [
+    ['تقرير التقفيل اليومي'],
+    ['الفرع', branchName],
+    ['اليوم', formatDayLabel(closingDate)],
+    ['الحالة', closing ? `مقفل — ${closing.admin} — ${closing.at}` : 'مفتوح'],
+    [],
+    ['الوقت', 'البيان', 'ملاحظة', 'طريقة الدفع', 'المبلغ', 'الإداري', 'الفرع', 'التاريخ'],
+    ...receipts.map(item => [item.time, item.player, item.note, item.method, item.amount, item.admin, branchName, item.date]),
+    [],
+    ['إجمالي المقبوضات', receipts.reduce((sum, item) => sum + item.amount, 0)]
+  ]);
+});
+$('#closing-close-btn').addEventListener('click', () => {
+  const records = branchRecords[currentBranch];
+  if (records.closings[closingDate]) {
+    delete records.closings[closingDate];
+    renderClosing();
+    toast(`تم إعادة فتح ${formatDayLabel(closingDate)}`);
+    return;
+  }
+  const total = records.receipts.filter(item => item.date === closingDate).reduce((sum, item) => sum + item.amount, 0);
+  if (!total) {
+    toast('لا توجد مقبوضات لتقفيل هذا اليوم');
+    return;
+  }
+  records.closings[closingDate] = {
+    admin: 'محمد الصعيدي',
+    at: new Date().toLocaleTimeString('ar-EG-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+  };
+  renderClosing();
+  toast(`تم تقفيل ${formatDayLabel(closingDate)} بإجمالي ${formatCurrency(total)}`);
+});
 
 $('#player-form').addEventListener('submit', event => {
   event.preventDefault();
   const form = event.target;
   const data = new FormData(form);
   const name = String(data.get('name') || '').trim();
+  const guardianPhone = String(data.get('guardianPhone') || '').trim();
   const plan = data.get('plan') === 'session' ? 'session' : 'monthly';
   const birthYear = Number(data.get('birthYear')) || 2012;
   const branch = academy[currentBranch];
   let month = '';
   let total = '';
   let remaining = '';
+
+  if (!/^01\d{9}$/.test(guardianPhone)) return toast('أدخل رقم ولي أمر صحيحًا مكوّنًا من 11 رقمًا يبدأ بـ 01');
 
   if (plan === 'session') {
     const monthInfo = getMonthInfo(data.get('sessionMonth'));
@@ -408,7 +645,7 @@ $('#player-form').addEventListener('submit', event => {
   }
 
   const code = `${currentBranch === 'badr' ? 'BD' : 'SH'}-${1900 + branch.playersList.length}`;
-  branch.playersList.unshift([name, code, plan === 'monthly' ? 'شهري' : 'بالسيشن', '—', 'بدون باص', 'نشط', month, total, remaining, birthYear]);
+  branch.playersList.unshift([name, code, plan === 'monthly' ? 'شهري' : 'بالسيشن', '—', 'بدون باص', 'نشط', month, total, remaining, birthYear, guardianPhone, 0]);
   branch.players++;
   branch.active++;
   if (plan === 'monthly') branch.plans.monthlyCount++;
@@ -427,16 +664,31 @@ $('#subscription-form').addEventListener('submit', event => {
 });
 $$('input[name="plan"]').forEach(input => input.addEventListener('change', updateSubscriptionNote));
 
+function adjustAbsence(code, delta) {
+  const record = academy[currentBranch].playersList.find(item => item[1] === code);
+  if (!record) return;
+  record[11] = Math.max(0, Number(record[11] || 0) + delta);
+}
+
 $('#attendance-roster').addEventListener('click', event => {
   const button = event.target.closest('[data-attendance-index]');
   if (!button) return;
   const player = branchRecords[currentBranch].attendance[button.dataset.attendanceIndex];
   player.present = !player.present;
+  adjustAbsence(player.code, player.present ? -1 : 1);
   renderAttendance();
+  renderPlayers();
+  renderDisconnected();
 });
 $('#mark-all').addEventListener('click', () => {
-  branchRecords[currentBranch].attendance.forEach(player => player.present = true);
+  branchRecords[currentBranch].attendance.forEach(player => {
+    if (player.present) return;
+    player.present = true;
+    adjustAbsence(player.code, -1);
+  });
   renderAttendance();
+  renderPlayers();
+  renderDisconnected();
   toast('تم تسجيل حضور كل اللاعبين في القائمة');
 });
 $$('[data-att-tab]').forEach(button => button.addEventListener('click', () => {
@@ -626,7 +878,7 @@ $('#export-btn').addEventListener('click', () => {
   const seats = seatSummary();
   downloadCsv(`academy-${currentBranch}-report.csv`, [['البيان','القيمة'],['الفرع',b.name],['اللاعبون',b.players],['الاشتراكات النشطة',b.active],['نسبة التحصيل',b.collection],['المقاعد المتاحة',seats.available]]);
 });
-$('[data-page="players"] .toolbar .btn-secondary').addEventListener('click', () => downloadCsv(`players-${currentBranch}.csv`, [['اللاعب','الكود','الاشتراك','الحضور','الباص','الحالة'], ...academy[currentBranch].playersList]));
+$('[data-page="players"] .toolbar .btn-secondary').addEventListener('click', () => downloadCsv(`players-${currentBranch}.csv`, [['اللاعب','الكود','ولي الأمر','الاشتراك','الحضور','الباص','الحالة'], ...academy[currentBranch].playersList.map(player => [player[0], player[1], player[10] || '', player[2], player[3], player[4], player[5]])]));
 $('[data-page="finance"] .page-heading .btn-secondary').addEventListener('click', () => downloadCsv(`finance-${currentBranch}.csv`, [['البيان','الفئة','التاريخ','طريقة الدفع','القيمة','الحالة'], ...branchRecords[currentBranch].transactions.map(row => [row[0],row[1],row[2],row[3],row[4],row[6]])]));
 
 $('#today-date').textContent = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(new Date());

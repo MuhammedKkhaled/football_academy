@@ -80,3 +80,58 @@ dialog{width:min(560px,calc(100% - 30px));padding:28px;border:0;border-radius:16
 .nav-submenu{display:grid;gap:2px;margin:2px 0 4px;padding-right:26px}
 .nav-submenu .nav-item{min-height:38px;padding:0 10px;font-size:12px}
 .nav-submenu .nav-item svg{width:16px;height:16px}
+
+/* Guardian phone and disconnected-player follow-up. */
+.phone-link{color:var(--green);font-weight:900;direction:ltr;unicode-bidi:embed}
+.phone-link:hover{text-decoration:underline}
+.phone-empty{color:var(--muted)}
+.status-stack{display:flex;flex-wrap:wrap;gap:4px}
+.status.disconnected{background:#fde9e5;color:#94362d}
+.absence-limit-control{display:flex;align-items:center;gap:10px;flex:none;padding:8px 14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:0 8px 24px rgba(21,44,36,.05)}
+.absence-limit-control label{margin:0;font-size:12px}
+.absence-limit-control input{width:72px;min-height:38px;padding:0 8px;text-align:center;font-weight:900;font-variant-numeric:tabular-nums}
+.absence-limit-control span{color:var(--muted);font-size:12px}
+.absence-summary{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+.absence-summary>div{padding:18px 22px}
+.absence-summary>div+div{border-right:1px solid var(--line)}
+.absence-summary span{display:block;color:var(--muted);font-size:12px}
+.absence-summary strong{display:block;font-size:27px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.absence-summary small{color:var(--muted);font-size:11px}
+.absence-actions{display:flex;align-items:center;gap:6px}
+.btn-small{min-height:32px;padding:0 11px;border-radius:8px;font-size:11px}
+.btn-small svg{width:15px;height:15px}
+@media(max-width:760px){.absence-limit-control{flex-wrap:wrap}.absence-summary{grid-template-columns:1fr}.absence-summary>div+div{border-right:0;border-top:1px solid var(--line)}}
+
+/* Daily closing report. */
+.closing-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:0 8px 24px rgba(21,44,36,.05)}
+.date-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);transition:background .2s ease,transform .2s ease}
+.icon-btn:hover{background:#f4f6f1}
+.icon-btn:disabled{opacity:.4;cursor:not-allowed}
+.icon-btn svg{width:17px;height:17px}
+.icon-btn.flip svg{transform:rotate(180deg)}
+.date-field{display:flex;align-items:center;gap:8px;margin:0;font-size:12px}
+.date-field span{color:var(--muted);font-weight:800}
+.date-field input{width:auto;min-height:40px;padding:0 10px;font-weight:800;font-variant-numeric:tabular-nums}
+.closing-state{display:flex;align-items:center;gap:10px}
+.closing-state b{display:block;font-size:13px}
+.closing-state small{display:block;color:var(--muted);font-size:11px}
+.status.open{background:#e8f5ee;color:var(--green)}
+.status.closed{background:#eef0f4;color:#4b5563}
+.closing-summary{display:grid;grid-template-columns:1.2fr repeat(3,1fr);margin-bottom:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+.closing-summary>div{padding:18px 22px}
+.closing-summary>div+div{border-right:1px solid var(--line)}
+.closing-summary span{display:block;color:var(--muted);font-size:12px}
+.closing-summary strong{display:block;font-size:27px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.closing-summary small{color:var(--muted);font-size:11px}
+.closing-total{background:linear-gradient(180deg,rgba(8,122,82,.08),transparent)}
+.closing-total strong{color:var(--green)}
+.closing-cell{display:grid;gap:2px}
+.closing-cell b{font-weight:800}
+.closing-cell small{color:var(--muted);font-size:11px}
+.pay-chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.pay-chip.instapay{background:#efe7fb;color:#6b3fa0}
+.pay-chip.cash{background:#e8f5ee;color:var(--green)}
+.pay-chip.visa{background:#e6eefb;color:#2c5aa0}
+@media(max-width:900px){.closing-summary{grid-template-columns:1fr 1fr}.closing-summary>div+div{border-right:0;border-top:1px solid var(--line)}}
+@media(max-width:760px){.closing-bar{align-items:stretch}.closing-state{justify-content:space-between}.closing-summary{grid-template-columns:1fr}.date-field{flex:1}.date-field input{width:100%}}
