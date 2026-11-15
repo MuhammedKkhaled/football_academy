@@ -98,8 +98,29 @@ const notifications = {
   ]
 };
 
+const DEMO_GUARDIANS = {
+  'BD-1842': 'علي حسن',
+  'BD-1791': 'محمد عبد الرحمن',
+  'BD-1755': 'هاني إبراهيم',
+  'BD-1698': 'وليد عبد العزيز',
+  'BD-1652': 'خالد سليم',
+  'SH-1204': 'شريف عادل',
+  'SH-1188': 'ياسر فتحي',
+  'SH-1152': 'حازم سعيد',
+  'SH-1097': 'أحمد كامل',
+  'SH-1021': 'وائل منصور'
+};
+
+Object.values(academy).forEach(branch => {
+  branch.playersList.forEach(player => {
+    if (!player[14]) player[14] = DEMO_GUARDIANS[player[1]] || `ولي أمر ${String(player[0]).split(/\s+/).pop()}`;
+  });
+});
+
 let currentBranch = 'badr';
 let closingDate = dayKey(0);
+let profilePlayerCode = '';
+let profileReturnPage = 'players';
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const icon = id => `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
@@ -194,8 +215,11 @@ function setNavGroupExpanded(expanded) {
 function showPage(name) {
   closeNotifications();
   $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === name));
-  $$('.nav-item[data-page]').forEach(item => item.classList.toggle('active', item.dataset.page === name));
-  const inNavGroup = NAV_GROUP_PAGES.includes(name);
+  $$('.nav-item[data-page]').forEach(item => {
+    const active = item.dataset.page === name || (name === 'player-profile' && item.dataset.page === 'players');
+    item.classList.toggle('active', active);
+  });
+  const inNavGroup = NAV_GROUP_PAGES.includes(name) || name === 'player-profile';
   $('#nav-group-toggle').classList.toggle('child-active', inNavGroup);
   if (inNavGroup) setNavGroupExpanded(true);
   $('#sidebar').classList.remove('open');
@@ -211,6 +235,101 @@ function isDisconnected(player) {
   return Number(player[11] || 0) >= Number(academy[currentBranch].absenceLimit || ABSENCE_LIMIT);
 }
 
+function playerAge(player) {
+  const year = Number(player[9]);
+  return year ? Math.max(0, new Date().getFullYear() - year) : '';
+}
+
+function ageGroupLabel(player) {
+  const age = playerAge(player);
+  if (age === '') return 'غير محدد';
+  if (age <= 10) return 'تحت 10 سنوات';
+  if (age <= 12) return 'تحت 12 سنة';
+  if (age <= 14) return 'تحت 14 سنة';
+  if (age <= 16) return 'تحت 16 سنة';
+  return 'تحت 18 سنة';
+}
+
+function guardianNameOf(player) {
+  return String(player[14] || '').trim();
+}
+
+function sessionDatesBack(count) {
+  const dates = [];
+  for (let offset = 0; dates.length < count && offset < 120; offset++) {
+    const date = new Date();
+    date.setDate(date.getDate() - offset);
+    if (SESSION_WEEKDAYS.has(date.getDay())) dates.push(dayKeyFromDate(date));
+  }
+  return dates;
+}
+
+function ensureAttendanceLogs() {
+  const records = branchRecords[currentBranch];
+  if (!records.attendanceLogs) records.attendanceLogs = {};
+  return records.attendanceLogs;
+}
+
+function playerAttendanceLog(player) {
+  const logs = ensureAttendanceLogs();
+  const code = player[1];
+  if (!logs[code]) {
+    const dates = sessionDatesBack(8);
+    const today = dayKey(0);
+    const roster = branchRecords[currentBranch].attendance.find(item => item.code === code);
+    let absences = Number(player[11] || 0);
+    logs[code] = dates.map(date => {
+      if (date === today && roster) return { date, present: Boolean(roster.present) };
+      const absent = absences > 0;
+      if (absent) absences--;
+      return { date, present: !absent };
+    });
+  }
+  return logs[code];
+}
+
+function syncTodayAttendance(code, present) {
+  const logs = ensureAttendanceLogs();
+  const today = dayKey(0);
+  const log = logs[code];
+  if (!log) return;
+  const row = log.find(item => item.date === today);
+  if (row) row.present = present;
+  else log.unshift({ date: today, present });
+}
+
+function playerSubscriptionRows(player) {
+  const outstanding = playerOutstanding(player[0]);
+  const receipts = branchRecords[currentBranch].receipts
+    .filter(item => item.player === player[0])
+    .slice()
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(b.time).localeCompare(String(a.time)));
+  const rows = receipts.map(item => {
+    const remaining = outstanding.receipt === item ? outstanding.remaining : 0;
+    return {
+      date: item.date,
+      time: item.time,
+      note: item.note || 'اشتراك',
+      amount: Number(item.amount || 0),
+      remaining,
+      dueDate: remaining > 0 ? item.dueDate : '',
+      method: item.method || ''
+    };
+  });
+  if (!outstanding.receipt && outstanding.remaining > 0) {
+    rows.unshift({
+      date: outstanding.dueDate || dayKey(0),
+      time: '',
+      note: outstanding.periodLabel ? `متبقي من ${outstanding.periodLabel}` : 'متبقي من اشتراك سابق',
+      amount: 0,
+      remaining: outstanding.remaining,
+      dueDate: outstanding.dueDate,
+      method: ''
+    });
+  }
+  return rows;
+}
+
 function phoneMarkup(phone) {
   const value = String(phone || '').trim();
   if (!value) return '<span class="phone-empty">—</span>';
@@ -219,15 +338,16 @@ function phoneMarkup(phone) {
 
 function renderPlayers() {
   $('#players-table').innerHTML = academy[currentBranch].playersList.map((player, i) => {
-    const age = player[9] ? Math.max(0, new Date().getFullYear() - Number(player[9])) : 12 + (i % 3) * 2;
+    const age = playerAge(player) || 12 + (i % 3) * 2;
     const planDetail = player[2] === 'بالسيشن' && player[8] ? `<small>${escapeHtml(formatMonth(player[6]))} · ${formatNumber(player[8])} من ${formatNumber(player[7])} سيشن</small>` : '';
     const outstanding = playerOutstanding(player[0]);
     const dueNote = outstanding.remaining > 0 ? `<small class="due-note">متبقي ${formatCurrency(outstanding.remaining)}${outstanding.periodLabel ? ` من ${escapeHtml(outstanding.periodLabel)}` : ''}${outstanding.dueDate ? ` · يستحق ${formatDayLabel(outstanding.dueDate)}` : ''}</small>` : '';
     const disconnected = isDisconnected(player);
     return `<tr>
-    <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${age} سنة</small></div></div></td>
+    <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${age} سنة · ${escapeHtml(ageGroupLabel(player))}</small></div></div></td>
     <td>${escapeHtml(player[1])}</td><td>${phoneMarkup(player[10])}</td><td><div class="plan-cell"><span>${escapeHtml(player[2])}</span>${planDetail}${dueNote}</div></td><td>${escapeHtml(player[3])}</td><td>${escapeHtml(player[4])}</td>
-    <td><div class="status-stack"><span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span>${disconnected ? '<span class="status disconnected">منقطع</span>' : ''}</div></td></tr>`;
+    <td><div class="status-stack"><span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span>${disconnected ? '<span class="status disconnected">منقطع</span>' : ''}</div></td>
+    <td><button class="btn btn-quiet btn-small" type="button" data-profile="${escapeHtml(player[1])}">الملف</button></td></tr>`;
   }).join('');
 }
 
@@ -251,8 +371,70 @@ function renderDisconnected() {
       <td>${phoneMarkup(player[10])}</td>
       <td>${escapeHtml(player[2])}</td>
       <td><span class="status disconnected">${formatNumber(absences)} غياب</span></td>
-      <td><div class="absence-actions"><a class="btn btn-quiet btn-small" href="tel:${escapeHtml(player[10] || '')}">${icon('i-phone')} اتصال</a><button class="btn btn-primary btn-small" type="button" data-reactivate="${escapeHtml(player[1])}">إعادة تفعيل</button></div></td></tr>`;
+      <td><div class="absence-actions"><a class="btn btn-quiet btn-small" href="tel:${escapeHtml(player[10] || '')}">${icon('i-phone')} اتصال</a><button class="btn btn-quiet btn-small" type="button" data-profile="${escapeHtml(player[1])}">الملف</button><button class="btn btn-primary btn-small" type="button" data-reactivate="${escapeHtml(player[1])}">إعادة تفعيل</button></div></td></tr>`;
   }).join('') : '<tr><td colspan="6"><div class="empty-state">لا يوجد لاعبون منقطعون عند الحد الحالي.</div></td></tr>';
+}
+
+function openPlayerProfile(code, fromPage) {
+  const player = academy[currentBranch].playersList.find(item => item[1] === code);
+  if (!player) return toast('تعذر فتح ملف هذا اللاعب');
+  profilePlayerCode = code;
+  profileReturnPage = fromPage || 'players';
+  renderPlayerProfile();
+  showPage('player-profile');
+}
+
+function renderPlayerProfile() {
+  if (!profilePlayerCode) return;
+  const player = academy[currentBranch].playersList.find(item => item[1] === profilePlayerCode);
+  if (!player) {
+    profilePlayerCode = '';
+    showPage(profileReturnPage || 'players');
+    return;
+  }
+  const age = playerAge(player);
+  const disconnected = isDisconnected(player);
+  const absences = Number(player[11] || 0);
+  const outstanding = playerOutstanding(player[0]);
+  const log = playerAttendanceLog(player);
+  const presentCount = log.filter(item => item.present).length;
+  const absentCount = log.length - presentCount;
+  $('#profile-title').textContent = player[0];
+  $('#profile-subtitle').textContent = `${player[1]} · ${academy[currentBranch].name} · ${ageGroupLabel(player)}`;
+  $('#profile-hero').innerHTML = `
+    <div class="profile-identity"><span class="avatar xl">${escapeHtml(initials(player[0]))}</span><div>
+      <b>${escapeHtml(player[0])}</b>
+      <small>${escapeHtml(player[1])}</small>
+      <div class="status-stack">${disconnected ? '<span class="status disconnected">منقطع</span>' : '<span class="status present">غير منقطع</span>'}<span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span></div>
+    </div></div>
+    <dl class="profile-facts">
+      <div><dt>السن</dt><dd>${age ? `${formatNumber(age)} سنة` : '—'}</dd></div>
+      <div><dt>الفرقة</dt><dd>${escapeHtml(ageGroupLabel(player))}</dd></div>
+      <div><dt>اسم ولي الأمر</dt><dd>${escapeHtml(guardianNameOf(player) || '—')}</dd></div>
+      <div><dt>رقم ولي الأمر</dt><dd>${phoneMarkup(player[10])}</dd></div>
+      <div><dt>نوع الاشتراك</dt><dd>${escapeHtml(player[2])}</dd></div>
+      <div><dt>الباص</dt><dd>${escapeHtml(player[4])}</dd></div>
+      <div><dt>مرات الغياب</dt><dd>${formatNumber(absences)}</dd></div>
+      <div><dt>متبقي عليه</dt><dd>${outstanding.remaining > 0 ? formatCurrency(outstanding.remaining) : 'لا يوجد'}</dd></div>
+    </dl>`;
+  $('#profile-attendance').innerHTML = `
+    <div class="profile-att-summary">
+      <div><span>حضور</span><strong>${formatNumber(presentCount)}</strong></div>
+      <div><span>غياب</span><strong>${formatNumber(absentCount)}</strong></div>
+      <div><span>الحالة</span><strong>${disconnected ? 'منقطع' : 'منتظم'}</strong></div>
+    </div>
+    <div class="data-table-wrap profile-table-wrap"><table class="data-table"><thead><tr><th>التاريخ</th><th>الحصة</th><th>الحالة</th></tr></thead><tbody>
+      ${log.map(item => `<tr><td>${escapeHtml(formatDayLabel(item.date))}</td><td>تدريب</td><td><span class="status ${item.present ? 'present' : 'disconnected'}">${item.present ? 'حاضر' : 'غائب'}</span></td></tr>`).join('')}
+    </tbody></table></div>`;
+  const rows = playerSubscriptionRows(player);
+  $('#profile-subscriptions').innerHTML = rows.length ? rows.map(item => `<tr>
+    <td>${escapeHtml(formatDayLabel(item.date))}${item.time ? ` · ${escapeHtml(item.time)}` : ''}</td>
+    <td>${escapeHtml(item.note)}</td>
+    <td>${item.amount > 0 ? formatCurrency(item.amount) : '—'}</td>
+    <td>${item.remaining > 0 ? `<span class="due-note">${formatCurrency(item.remaining)}</span>` : 'لا يوجد'}</td>
+    <td>${item.method ? `<span class="pay-chip ${methodSlug(item.method)}">${escapeHtml(item.method)}</span>` : '—'}</td>
+    <td><span class="status ${item.remaining > 0 ? 'late' : 'present'}">${item.remaining > 0 ? 'متبقي' : 'مسدد'}</span></td>
+  </tr>`).join('') : '<tr><td colspan="6"><div class="empty-state">لا يوجد تاريخ اشتراكات مسجل لهذا اللاعب بعد.</div></td></tr>';
 }
 
 const PAY_METHODS = [
@@ -557,6 +739,7 @@ function renderBranch() {
   $('#finance-net').textContent = b.finance.net;
   renderPlayers();
   renderDisconnected();
+  renderPlayerProfile();
   renderClosing();
   renderPlans();
   renderPricing();
@@ -767,7 +950,17 @@ $('#absence-limit').addEventListener('change', event => {
   renderPlayers();
   toast(`تم ضبط حد الانقطاع على ${formatNumber(value)} غياب في ${academy[currentBranch].name}`);
 });
+$('#players-table').addEventListener('click', event => {
+  const button = event.target.closest('[data-profile]');
+  if (!button) return;
+  openPlayerProfile(button.dataset.profile, 'players');
+});
 $('#disconnected-table').addEventListener('click', event => {
+  const profileBtn = event.target.closest('[data-profile]');
+  if (profileBtn) {
+    openPlayerProfile(profileBtn.dataset.profile, 'disconnected');
+    return;
+  }
   const button = event.target.closest('[data-reactivate]');
   if (!button) return;
   const record = academy[currentBranch].playersList.find(player => player[1] === button.dataset.reactivate);
@@ -775,8 +968,10 @@ $('#disconnected-table').addEventListener('click', event => {
   record[11] = 0;
   renderDisconnected();
   renderPlayers();
+  renderPlayerProfile();
   toast(`تمت إعادة تفعيل ${record[0]} وتصفير عدد الغياب`);
 });
+$('#player-profile-back').addEventListener('click', () => showPage(profileReturnPage || 'players'));
 $('#disconnected-export').addEventListener('click', () => {
   const rows = academy[currentBranch].playersList.filter(isDisconnected).map(player => [player[0], player[1], player[10] || '', player[2], player[11] || 0]);
   downloadCsv(`disconnected-${currentBranch}.csv`, [['اللاعب','الكود','ولي الأمر','الاشتراك','مرات الغياب'], ...rows]);
@@ -848,6 +1043,7 @@ $('#player-form').addEventListener('submit', event => {
   const form = event.target;
   const data = new FormData(form);
   const name = String(data.get('name') || '').trim();
+  const guardianName = String(data.get('guardianName') || '').trim();
   const guardianPhone = String(data.get('guardianPhone') || '').trim();
   const plan = data.get('plan') === 'session' ? 'session' : 'monthly';
   const birthYear = Number(data.get('birthYear')) || 2012;
@@ -857,6 +1053,7 @@ $('#player-form').addEventListener('submit', event => {
   let remaining = '';
   let monthlyDebt = { period: '', amount: 0 };
 
+  if (!guardianName) return toast('أدخل اسم ولي الأمر');
   if (!/^01\d{9}$/.test(guardianPhone)) return toast('أدخل رقم ولي أمر صحيحًا مكوّنًا من 11 رقمًا يبدأ بـ 01');
 
   if (plan === 'monthly') {
@@ -875,7 +1072,7 @@ $('#player-form').addEventListener('submit', event => {
   }
 
   const code = `${currentBranch === 'badr' ? 'BD' : 'SH'}-${1900 + branch.playersList.length}`;
-  const player = [name, code, plan === 'monthly' ? 'شهري' : 'بالسيشن', '—', 'بدون باص', 'نشط', month, total, remaining, birthYear, guardianPhone, 0, 0, ''];
+  const player = [name, code, plan === 'monthly' ? 'شهري' : 'بالسيشن', '—', 'بدون باص', 'نشط', month, total, remaining, birthYear, guardianPhone, 0, 0, '', guardianName];
   if (monthlyDebt.amount > 0) {
     applyMonthlyCarryover(player, monthlyDebt.amount, monthlyDebt.period);
     trackCarryoverPayment(player, monthlyDebt.amount, monthlyDebt.period);
@@ -1007,19 +1204,23 @@ $('#attendance-roster').addEventListener('click', event => {
   const player = branchRecords[currentBranch].attendance[button.dataset.attendanceIndex];
   player.present = !player.present;
   adjustAbsence(player.code, player.present ? -1 : 1);
+  syncTodayAttendance(player.code, player.present);
   renderAttendance();
   renderPlayers();
   renderDisconnected();
+  renderPlayerProfile();
 });
 $('#mark-all').addEventListener('click', () => {
   branchRecords[currentBranch].attendance.forEach(player => {
     if (player.present) return;
     player.present = true;
     adjustAbsence(player.code, -1);
+    syncTodayAttendance(player.code, true);
   });
   renderAttendance();
   renderPlayers();
   renderDisconnected();
+  renderPlayerProfile();
   toast('تم تسجيل حضور كل اللاعبين في القائمة');
 });
 $$('[data-att-tab]').forEach(button => button.addEventListener('click', () => {
@@ -1212,7 +1413,7 @@ $('#export-btn').addEventListener('click', () => {
   const seats = seatSummary();
   downloadCsv(`academy-${currentBranch}-report.csv`, [['البيان','القيمة'],['الفرع',b.name],['اللاعبون',b.players],['الاشتراكات النشطة',b.active],['نسبة التحصيل',b.collection],['المقاعد المتاحة',seats.available]]);
 });
-$('[data-page="players"] .toolbar .btn-secondary').addEventListener('click', () => downloadCsv(`players-${currentBranch}.csv`, [['اللاعب','الكود','ولي الأمر','الاشتراك','الحضور','الباص','الحالة'], ...academy[currentBranch].playersList.map(player => [player[0], player[1], player[10] || '', player[2], player[3], player[4], player[5]])]));
+$('[data-page="players"] .toolbar .btn-secondary').addEventListener('click', () => downloadCsv(`players-${currentBranch}.csv`, [['اللاعب','الكود','اسم ولي الأمر','رقم ولي الأمر','الاشتراك','الحضور','الباص','الحالة'], ...academy[currentBranch].playersList.map(player => [player[0], player[1], player[14] || '', player[10] || '', player[2], player[3], player[4], player[5]])]));
 $('[data-page="finance"] .page-heading .btn-secondary').addEventListener('click', () => downloadCsv(`finance-${currentBranch}.csv`, [['البيان','الفئة','التاريخ','طريقة الدفع','القيمة','الحالة'], ...branchRecords[currentBranch].transactions.map(row => [row[0],row[1],row[2],row[3],row[4],row[6]])]));
 
 $('#today-date').textContent = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(new Date());

@@ -162,3 +162,26 @@ dialog{width:min(560px,calc(100% - 30px));padding:28px;border:0;border-radius:16
 .receipt-note{margin:0;color:var(--muted);font-size:11px}
 .receipt-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
 @media(max-width:760px){.receipt-rows,.receipt-figures{grid-template-columns:1fr}.receipt-actions{flex-direction:column}.receipt-actions .btn{width:100%}.heading-actions{width:100%}.heading-actions .btn{flex:1}}
+
+.profile-hero{display:grid;grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr);gap:22px;margin-bottom:20px;padding:22px 24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+.profile-identity{display:flex;align-items:flex-start;gap:16px}
+.profile-identity b,.profile-identity small{display:block}
+.profile-identity b{font-size:22px;letter-spacing:-.03em}
+.profile-identity small{margin:4px 0 12px;color:var(--muted)}
+.profile-facts{display:grid;grid-template-columns:1fr 1fr;margin:0;gap:0 24px}
+.profile-facts>div{padding:11px 0;border-bottom:1px solid var(--line)}
+.profile-facts dt{color:var(--muted);font-size:11px}
+.profile-facts dd{margin:3px 0 0;font-weight:900}
+.profile-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:20px;align-items:start}
+.profile-grid .panel{overflow:hidden}
+.profile-att-summary{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.profile-att-summary>div{padding:16px 22px}
+.profile-att-summary>div+div{border-right:1px solid var(--line)}
+.profile-att-summary span,.profile-att-summary strong{display:block}
+.profile-att-summary span{color:var(--muted)}
+.profile-att-summary strong{margin-top:2px;font-size:22px;font-variant-numeric:tabular-nums}
+.profile-table-wrap{border:0;border-radius:0;box-shadow:none}
+#player-profile-back{margin-bottom:10px}
+#player-profile-back svg{transform:none}
+@media(max-width:1100px){.profile-hero,.profile-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.profile-facts,.profile-att-summary{grid-template-columns:1fr}.profile-att-summary>div+div{border-right:0;border-top:1px solid var(--line)}}
