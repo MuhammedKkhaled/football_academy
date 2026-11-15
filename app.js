@@ -113,6 +113,27 @@ function currentMonthValue() {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
+function previousMonthValue() {
+  const date = new Date();
+  date.setDate(1);
+  date.setMonth(date.getMonth() - 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function monthValueForPeriod(period) {
+  return period === 'last' ? previousMonthValue() : currentMonthValue();
+}
+
+function monthLastDay(value) {
+  const info = getMonthInfo(value);
+  if (!info) return '';
+  return `${info.year}-${String(info.month).padStart(2, '0')}-${String(info.days).padStart(2, '0')}`;
+}
+
+function periodMonthLabel(period) {
+  return formatMonth(monthValueForPeriod(period));
+}
+
 function dayKeyFromDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
@@ -201,7 +222,7 @@ function renderPlayers() {
     const age = player[9] ? Math.max(0, new Date().getFullYear() - Number(player[9])) : 12 + (i % 3) * 2;
     const planDetail = player[2] === 'بالسيشن' && player[8] ? `<small>${escapeHtml(formatMonth(player[6]))} · ${formatNumber(player[8])} من ${formatNumber(player[7])} سيشن</small>` : '';
     const outstanding = playerOutstanding(player[0]);
-    const dueNote = outstanding.remaining > 0 ? `<small class="due-note">متبقي ${formatCurrency(outstanding.remaining)} · يستحق ${formatDayLabel(outstanding.dueDate)}</small>` : '';
+    const dueNote = outstanding.remaining > 0 ? `<small class="due-note">متبقي ${formatCurrency(outstanding.remaining)}${outstanding.periodLabel ? ` من ${escapeHtml(outstanding.periodLabel)}` : ''}${outstanding.dueDate ? ` · يستحق ${formatDayLabel(outstanding.dueDate)}` : ''}</small>` : '';
     const disconnected = isDisconnected(player);
     return `<tr>
     <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${age} سنة</small></div></div></td>
@@ -244,18 +265,76 @@ function methodSlug(method) {
   return method === 'انستا باي' ? 'instapay' : method === 'فيزا' ? 'visa' : 'cash';
 }
 
+function playerByName(name) {
+  return academy[currentBranch].playersList.find(player => player[0] === name) || null;
+}
+
 function playerOutstanding(playerName) {
   const records = branchRecords[currentBranch];
   let latest = null;
   records.receipts.forEach(item => {
     if (item.player === playerName && typeof item.remaining === 'number') latest = item;
   });
+  if (latest && Number(latest.remaining) > 0) {
+    return {
+      remaining: Math.max(0, Number(latest.remaining)),
+      dueDate: latest.dueDate || '',
+      total: Number(latest.total || 0),
+      receipt: latest,
+      periodLabel: latest.periodLabel || ''
+    };
+  }
+  const player = playerByName(playerName);
+  const carry = Number(player?.[12] || 0);
+  const period = player?.[13] || '';
+  if (player && carry > 0 && (period === 'current' || period === 'last')) {
+    return {
+      remaining: carry,
+      dueDate: monthLastDay(monthValueForPeriod(period)),
+      total: carry,
+      receipt: null,
+      periodLabel: periodMonthLabel(period)
+    };
+  }
   return {
     remaining: latest ? Math.max(0, Number(latest.remaining)) : 0,
     dueDate: latest && latest.dueDate ? latest.dueDate : '',
     total: latest ? Number(latest.total || 0) : 0,
-    receipt: latest
+    receipt: latest,
+    periodLabel: ''
   };
+}
+
+function readMonthlyDebt(data, monthlyPrice) {
+  const period = String(data.get('monthlyDebtPeriod') || '');
+  const raw = String(data.get('monthlyDebtAmount') || '').trim();
+  const amount = Number(raw);
+  if (!period) return { period: '', amount: 0 };
+  if (period !== 'current' && period !== 'last') return { error: 'اختر هذا الشهر أو الشهر الماضي' };
+  if (!raw || !Number.isFinite(amount) || amount <= 0) return { error: 'أدخل المبلغ المتبقي على اللاعب' };
+  if (amount > monthlyPrice) return { error: 'المتبقي لا يتجاوز سعر الاشتراك الشهري' };
+  return { period, amount };
+}
+
+function applyMonthlyCarryover(player, amount, period) {
+  player[12] = amount;
+  player[13] = period;
+  if (amount > 0) player[5] = 'متأخر';
+}
+
+function trackCarryoverPayment(player, amount, period) {
+  const records = branchRecords[currentBranch];
+  const label = periodMonthLabel(period);
+  records.payments.unshift([initials(player[0]), player[0], `متبقي ${formatCurrency(amount)} من ${label}`, formatCurrency(amount)]);
+  if (records.payments.length > 4) records.payments.length = 4;
+}
+
+function syncMonthlyDebtAmount(periodSelect, amountInput) {
+  if (!periodSelect || !amountInput) return;
+  const hasPeriod = Boolean(periodSelect.value);
+  amountInput.disabled = !hasPeriod;
+  amountInput.required = hasPeriod;
+  if (!hasPeriod) amountInput.value = '';
 }
 
 function closingDueTotal(list) {
@@ -281,9 +360,10 @@ function fillPaymentDefaults() {
   const outstanding = playerOutstanding(player[0]);
   if (outstanding.remaining > 0) {
     $('#payment-total').value = outstanding.remaining;
+    const fromMonth = outstanding.periodLabel ? ` من ${outstanding.periodLabel}` : ' من دفعة سابقة';
     $('#payment-hint').textContent = outstanding.dueDate
-      ? `متبقي من دفعة سابقة مستحق يوم ${formatDayLabel(outstanding.dueDate)}.`
-      : 'متبقي من دفعة سابقة.';
+      ? `متبقي عليه ${formatCurrency(outstanding.remaining)}${fromMonth} · يستحق ${formatDayLabel(outstanding.dueDate)}.`
+      : `متبقي عليه ${formatCurrency(outstanding.remaining)}${fromMonth}.`;
     return;
   }
   const total = player[2] === 'بالسيشن' ? plans.session * (Number(player[7]) || 8) : plans.monthly;
@@ -508,12 +588,15 @@ function updatePlayerPlanUI() {
   if (!form) return;
   const plan = form.elements.plan.value;
   const sessionFields = $('#session-fields');
+  const monthlyFields = $('#monthly-fields');
   const monthInput = $('#session-month');
   const countInput = $('#session-remaining');
   const monthly = academy[currentBranch].plans.monthly;
   const session = academy[currentBranch].plans.session;
   const isSession = plan === 'session';
   sessionFields.hidden = !isSession;
+  monthlyFields.hidden = isSession;
+  syncMonthlyDebtAmount($('#monthly-debt-period'), $('#monthly-debt-amount'));
 
   if (isSession) {
     if (!monthInput.value) monthInput.value = currentMonthValue();
@@ -524,7 +607,9 @@ function updatePlayerPlanUI() {
       $('#player-price-note').innerHTML = `<b>${formatNumber(countInput.value)} سيشن متبقية</b> في ${escapeHtml(monthInfo.label)} × ${formatCurrency(session)} = ${formatCurrency(Number(countInput.value) * session)}. إجمالي سيشنات الشهر ${formatNumber(monthInfo.total)}.`;
     }
   } else {
-    $('#player-price-note').innerHTML = `<b>${formatCurrency(monthly)} شهريًا.</b> السعر ثابت مهما كان عدد أيام الشهر.`;
+    const period = $('#monthly-debt-period').value;
+    const extra = period ? ` يمكن تسجيل متبقي من ${escapeHtml(periodMonthLabel(period))} حتى ${formatCurrency(monthly)}.` : ' إن كان عليه متبقي من هذا الشهر أو الشهر الماضي سجّله هنا.';
+    $('#player-price-note').innerHTML = `<b>${formatCurrency(monthly)} شهريًا.</b> السعر ثابت مهما كان عدد أيام الشهر.${extra}`;
   }
 }
 
@@ -534,8 +619,12 @@ function updateSubscriptionNote() {
   if (!note || !checked) return;
   const plans = academy[currentBranch].plans;
   const monthInfo = getMonthInfo(currentMonthValue());
-  note.textContent = checked.value === 'monthly'
-    ? `الفترة: ${monthInfo?.label || 'الشهر الحالي'} · ${formatCurrency(plans.monthly)} — السعر ثابت مهما كان عدد أيام الشهر.`
+  const monthlyFields = $('#subscription-monthly-fields');
+  const isMonthly = checked.value === 'monthly';
+  if (monthlyFields) monthlyFields.hidden = !isMonthly;
+  syncMonthlyDebtAmount($('#sub-monthly-debt-period'), $('#sub-monthly-debt-amount'));
+  note.textContent = isMonthly
+    ? `الفترة: ${monthInfo?.label || 'الشهر الحالي'} · ${formatCurrency(plans.monthly)}. إن كان عليه متبقي من هذا الشهر أو الشهر الماضي سجّله قبل التأكيد.`
     : `${monthInfo ? `${monthInfo.total} سيشن في ${monthInfo.label}` : 'سيشنان أسبوعيًا'} · ${formatCurrency(plans.session)} للسيشن — يُحسب الحضور الفعلي.`;
 }
 
@@ -569,7 +658,20 @@ function preparePlayerDialog() {
   if (!monthInput.value) monthInput.value = currentMonthValue();
   const form = $('#player-form');
   if (form) form.elements.plan.value = 'monthly';
+  const period = $('#monthly-debt-period');
+  if (period) period.value = '';
   updatePlayerPlanUI();
+}
+
+function prepareSubscriptionDialog() {
+  const select = $('#subscription-player');
+  const players = academy[currentBranch].playersList;
+  select.innerHTML = players.map(player => `<option value="${escapeHtml(player[1])}">${escapeHtml(player[0])} — ${escapeHtml(player[1])} · ${escapeHtml(player[2])}</option>`).join('');
+  const form = $('#subscription-form');
+  if (form) form.elements.plan.value = 'monthly';
+  const period = $('#sub-monthly-debt-period');
+  if (period) period.value = '';
+  updateSubscriptionNote();
 }
 
 function renderBusPlayerPicker() {
@@ -637,6 +739,8 @@ $$('[data-open]').forEach(button => button.addEventListener('click', () => {
   const id = button.dataset.open;
   if (id === 'bus-dialog') prepareBusDialog();
   if (id === 'coach-dialog') prepareCoachDialog();
+  if (id === 'player-dialog') preparePlayerDialog();
+  if (id === 'subscription-dialog') prepareSubscriptionDialog();
   $(`#${id}`).showModal();
 }));
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
@@ -751,8 +855,14 @@ $('#player-form').addEventListener('submit', event => {
   let month = '';
   let total = '';
   let remaining = '';
+  let monthlyDebt = { period: '', amount: 0 };
 
   if (!/^01\d{9}$/.test(guardianPhone)) return toast('أدخل رقم ولي أمر صحيحًا مكوّنًا من 11 رقمًا يبدأ بـ 01');
+
+  if (plan === 'monthly') {
+    monthlyDebt = readMonthlyDebt(data, branch.plans.monthly);
+    if (monthlyDebt.error) return toast(monthlyDebt.error);
+  }
 
   if (plan === 'session') {
     const monthInfo = getMonthInfo(data.get('sessionMonth'));
@@ -765,7 +875,12 @@ $('#player-form').addEventListener('submit', event => {
   }
 
   const code = `${currentBranch === 'badr' ? 'BD' : 'SH'}-${1900 + branch.playersList.length}`;
-  branch.playersList.unshift([name, code, plan === 'monthly' ? 'شهري' : 'بالسيشن', '—', 'بدون باص', 'نشط', month, total, remaining, birthYear, guardianPhone, 0]);
+  const player = [name, code, plan === 'monthly' ? 'شهري' : 'بالسيشن', '—', 'بدون باص', 'نشط', month, total, remaining, birthYear, guardianPhone, 0, 0, ''];
+  if (monthlyDebt.amount > 0) {
+    applyMonthlyCarryover(player, monthlyDebt.amount, monthlyDebt.period);
+    trackCarryoverPayment(player, monthlyDebt.amount, monthlyDebt.period);
+  }
+  branch.playersList.unshift(player);
   branch.players++;
   branch.active++;
   if (plan === 'monthly') branch.plans.monthlyCount++;
@@ -774,13 +889,43 @@ $('#player-form').addEventListener('submit', event => {
   preparePlayerDialog();
   renderBranch();
   form.closest('dialog').close();
-  toast(`تمت إضافة ${name} بنجاح`);
+  toast(monthlyDebt.amount > 0
+    ? `تمت إضافة ${name} مع متبقي ${formatCurrency(monthlyDebt.amount)} من ${periodMonthLabel(monthlyDebt.period)}`
+    : `تمت إضافة ${name} بنجاح`);
 });
 
 $('#subscription-form').addEventListener('submit', event => {
   event.preventDefault();
-  event.target.closest('dialog').close();
-  toast('تم إنشاء الاشتراك التجريبي بنجاح');
+  const form = event.target;
+  const data = new FormData(form);
+  const player = academy[currentBranch].playersList.find(item => item[1] === data.get('player'));
+  const plan = data.get('plan') === 'session' ? 'session' : 'monthly';
+  if (!player) return toast('اختر لاعبًا من القائمة');
+  if (plan === 'monthly') {
+    const debt = readMonthlyDebt(data, academy[currentBranch].plans.monthly);
+    if (debt.error) return toast(debt.error);
+    if (player[2] === 'بالسيشن') {
+      academy[currentBranch].plans.sessionCount = Math.max(0, academy[currentBranch].plans.sessionCount - 1);
+      academy[currentBranch].plans.monthlyCount++;
+    }
+    player[2] = 'شهري';
+    player[6] = '';
+    player[7] = '';
+    player[8] = '';
+    if (debt.amount > 0) {
+      applyMonthlyCarryover(player, debt.amount, debt.period);
+      trackCarryoverPayment(player, debt.amount, debt.period);
+    }
+    renderBranch();
+    form.closest('dialog').close();
+    toast(debt.amount > 0
+      ? `تم تسجيل الاشتراك الشهري لـ ${player[0]} مع متبقي ${formatCurrency(debt.amount)} من ${periodMonthLabel(debt.period)}`
+      : `تم تسجيل الاشتراك الشهري لـ ${player[0]}`);
+    return;
+  }
+  player[2] = 'بالسيشن';
+  form.closest('dialog').close();
+  toast(`تم تسجيل اشتراك بالسيشن لـ ${player[0]}`);
 });
 $$('input[name="plan"]').forEach(input => input.addEventListener('change', updateSubscriptionNote));
 
@@ -824,6 +969,9 @@ $('#payment-form').addEventListener('submit', event => {
     dueDate,
     no: `R-${currentBranch === 'badr' ? 'BD' : 'SH'}-${1001 + records.receipts.length}`
   };
+  player[12] = 0;
+  player[13] = '';
+  player[5] = remaining > 0 ? 'متأخر' : 'نشط';
   records.receipts.push(receipt);
   if (remaining > 0) {
     records.payments.unshift([initials(player[0]), player[0], `متبقي ${formatCurrency(remaining)} — يستحق ${formatDayLabel(dueDate)}`, formatCurrency(remaining)]);
@@ -956,6 +1104,9 @@ $('#pricing-session').addEventListener('input', event => {
 $('#player-plan').addEventListener('change', updatePlayerPlanUI);
 $('#session-month').addEventListener('change', updatePlayerPlanUI);
 $('#session-remaining').addEventListener('input', updatePlayerPlanUI);
+$('#monthly-debt-period').addEventListener('change', updatePlayerPlanUI);
+$('#monthly-debt-amount').addEventListener('input', updatePlayerPlanUI);
+$('#sub-monthly-debt-period').addEventListener('change', updateSubscriptionNote);
 $('#session-month').value = currentMonthValue();
 
 $('#bus-player-picker').addEventListener('change', updateBusPickerCount);
