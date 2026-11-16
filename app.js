@@ -3,6 +3,7 @@ const SESSION_WEEKDAYS = new Set([0, 3]);
 const ABSENCE_LIMIT = 5;
 const NAV_GROUP_PAGES = ['players', 'disconnected', 'subscriptions', 'buses'];
 const ATTENDANCE_GROUP_PAGES = ['attendance', 'staff-attendance'];
+const BUDGET_GROUP_PAGES = ['monthly-budget', 'annual-budget'];
 
 const academy = {
   badr: {
@@ -31,6 +32,29 @@ const academy = {
   }
 };
 
+const BUDGET_CATEGORIES = [
+  ['subscriptions', 'الاشتراكات'], ['uniform', 'الزي'], ['training', 'الترينج'], ['flats', 'الفلات'],
+  ['shirt', 'القميص'], ['bag', 'الشنطة'], ['offer', 'العروض']
+];
+const budgetBases = [[4200, 2800, 6100], [750, 500, 1200], [900, 650, 1350], [600, 350, 850], [800, 450, 1100], [500, 300, 700], [650, 400, 900]];
+function makeBudgetRows(multiplier, month) {
+  return [
+    { offset: -5, factor: .76, note: 'تحصيلات بداية الأسبوع.' },
+    { offset: -4, factor: 1.05, note: 'عرض للأشقاء على الاشتراكات.' },
+    { offset: -3, factor: .91, note: 'مراجعة نقدية تمت مع الإدارة.' },
+    { offset: -2, factor: 1.18, note: 'إقبال على الزي والشنط.' },
+    { offset: -1, factor: .88, note: 'تم إيداع تحصيلات الحساب.' },
+    { offset: 0, factor: 1.12, note: 'مستمر حتى نهاية اليوم.' }
+  ].map((row, rowIndex) => ({
+    date: `${month}-${String(3 + rowIndex * 4).padStart(2, '0')}`, note: row.note,
+    amounts: budgetBases.map((base, categoryIndex) => base.map((amount, paymentIndex) => Math.round(amount * multiplier * row.factor * (1 + ((rowIndex + categoryIndex + paymentIndex) % 3) * .04) / 50) * 50))
+  }));
+}
+function makeYearBudget(multiplier) {
+  const year = new Date().getFullYear();
+  return Array.from({length: 10}, (_, index) => makeBudgetRows(multiplier * (.86 + index * .025), `${year}-${String(index + 1).padStart(2, '0')}`)).flat();
+}
+
 const branchRecords = {
   badr: {
     attendance: [{name:'يوسف علي',code:'BD-1842',present:true},{name:'زياد محمد',code:'BD-1791',present:true},{name:'أحمد هاني',code:'BD-1755',present:false},{name:'مروان وليد',code:'BD-1698',present:true},{name:'سليم خالد',code:'BD-1652',present:true},{name:'فارس عماد',code:'BD-1629',present:false}],
@@ -47,6 +71,7 @@ const branchRecords = {
       { name: 'أحمد علاء', role: 'لياقة بدنية', contract: 'part', sessionRate: 500, sessions: 12, overtimeRate: 600 }
     ],
     payments: [['ي ع','يوسف علي','متأخر 9 أيام','1,250 ج.م'],['ز م','زياد محمد','متأخر 6 أيام','900 ج.م'],['م و','مروان وليد','يستحق اليوم','1,250 ج.م']],
+    budget: makeYearBudget(1),
     transactions: [['اشتراك يوسف علي','اشتراكات','13 نوفمبر','InstaPay','+1,250 ج.م','in','مؤكد'],['صيانة باص 02','نقل','12 نوفمبر','نقدي','−3,400 ج.م','out','معتمد'],['شراء 12 كرة تدريب','متنوعات','11 نوفمبر','تحويل بنكي','−8,600 ج.م','out','للمراجعة']],
     closings: { [dayKey(-1)]: { admin: 'محمد الصعيدي', at: '9:40 م' } },
     receipts: [
@@ -81,6 +106,7 @@ const branchRecords = {
       { name: 'ياسر كمال', role: 'مدرب مهارات', contract: 'part', sessionRate: 430, sessions: 10, overtimeRate: 520 }
     ],
     payments: [['س ح','سيف حازم','متأخر 7 أيام','1,450 ج.م'],['ن و','نديم وائل','متأخر 3 أيام','1,050 ج.م'],['ع أ','علي أحمد','يستحق غدًا','1,450 ج.م']],
+    budget: makeYearBudget(.82),
     transactions: [['اشتراك آدم شريف','اشتراكات','13 نوفمبر','بطاقة بنكية','+1,450 ج.م','in','مؤكد'],['وقود باص 01','نقل','12 نوفمبر','نقدي','−2,100 ج.م','out','معتمد'],['شراء أطقم تدريب','متنوعات','10 نوفمبر','تحويل بنكي','−6,250 ج.م','out','للمراجعة']],
     closings: {},
     receipts: [
@@ -242,6 +268,14 @@ function showPage(name) {
     if (attToggle) attToggle.setAttribute('aria-expanded', 'true');
     const attMenu = $('#attendance-group-menu');
     if (attMenu) attMenu.hidden = false;
+  }
+  const inBudgetGroup = BUDGET_GROUP_PAGES.includes(name);
+  const budgetToggle = $('#budget-group-toggle');
+  if (budgetToggle) budgetToggle.classList.toggle('child-active', inBudgetGroup);
+  if (inBudgetGroup) {
+    if (budgetToggle) budgetToggle.setAttribute('aria-expanded', 'true');
+    const budgetMenu = $('#budget-group-menu');
+    if (budgetMenu) budgetMenu.hidden = false;
   }
   $('#sidebar').classList.remove('open');
   window.scrollTo({top: 0, behavior: 'smooth'});
@@ -763,6 +797,35 @@ function renderStaffAttendance() {
   }).join('');
 }
 
+function renderMonthlyBudget() {
+  const monthInput = $('#budget-month');
+  const year = new Date().getFullYear();
+  monthInput.min = `${year}-01`;
+  monthInput.max = `${year}-10`;
+  if (!monthInput.value || monthInput.value > monthInput.max) monthInput.value = `${year}-10`;
+  const rows = branchRecords[currentBranch].budget.filter(row => row.date.startsWith(monthInput.value));
+  const totals = BUDGET_CATEGORIES.map((_, categoryIndex) => rows.reduce((sum, row) => row.amounts[categoryIndex].map(Number).map((amount, paymentIndex) => sum[paymentIndex] + amount), [0, 0, 0]));
+  $('#budget-summary-table').innerHTML = rows.length ? totals.map((payments, index) => `<tr><td><b>${BUDGET_CATEGORIES[index][1]}</b></td>${payments.map(amount => `<td>${formatCurrency(amount)}</td>`).join('')}<td class="budget-total">${formatCurrency(payments.reduce((sum, amount) => sum + amount, 0))}</td></tr>`).join('') : '<tr><td colspan="5" class="empty-state">لا توجد ميزانية مسجلة لهذا الشهر.</td></tr>';
+  $('#budget-daily-table').innerHTML = rows.length ? rows.map(row => {
+    const total = row.amounts.flat().reduce((sum, amount) => sum + amount, 0);
+    return `<tr><td><b>${formatDayLabel(row.date)}</b></td>${row.amounts.map(payments => `<td class="budget-payment-cell"><span>فيزا ${formatNumber(payments[0])}</span><span>حساب ${formatNumber(payments[1])}</span><span>نقدي ${formatNumber(payments[2])}</span></td>`).join('')}<td class="budget-total">${formatCurrency(total)}</td><td class="budget-note">${escapeHtml(row.note)}</td></tr>`;
+  }).join('') : '<tr><td colspan="10" class="empty-state">اختر شهرًا به بيانات مسجلة.</td></tr>';
+}
+
+function renderAnnualBudget() {
+  const year = new Date().getFullYear();
+  const branchRows = Object.entries(academy).map(([key, branch]) => {
+    const months = Array.from({length: 10}, (_, index) => branchRecords[key].budget
+      .filter(row => row.date.startsWith(`${year}-${String(index + 1).padStart(2, '0')}`))
+      .reduce((sum, row) => sum + row.amounts.flat().reduce((total, amount) => total + amount, 0), 0));
+    return { name: branch.name, months, total: months.reduce((sum, amount) => sum + amount, 0) };
+  });
+  const monthTotals = Array.from({length: 10}, (_, index) => branchRows.reduce((sum, branch) => sum + branch.months[index], 0));
+  $('#annual-budget-year').textContent = formatNumber(year);
+  $('#annual-budget-table').innerHTML = branchRows.map(branch => `<tr><td><b>${escapeHtml(branch.name)}</b></td>${branch.months.map(amount => `<td>${formatCurrency(amount)}</td>`).join('')}<td class="no-operation">غير تشغيلي</td><td class="no-operation">غير تشغيلي</td><td class="budget-total">${formatCurrency(branch.total)}</td></tr>`).join('');
+  $('#annual-budget-total').innerHTML = `<tr><th>إجمالي الشهر</th>${monthTotals.map(amount => `<th>${formatCurrency(amount)}</th>`).join('')}<th class="no-operation">—</th><th class="no-operation">—</th><th class="annual-total">${formatCurrency(monthTotals.reduce((sum, amount) => sum + amount, 0))}</th></tr>`;
+}
+
 function renderBranch() {
   const b = academy[currentBranch];
   const seats = seatSummary();
@@ -793,6 +856,8 @@ function renderBranch() {
   renderBranchRecords();
   renderCoachProfiles();
   renderStaffAttendance();
+  renderMonthlyBudget();
+  renderAnnualBudget();
   renderNotifications();
   updatePlayerPlanUI();
   updateSubscriptionNote();
@@ -965,6 +1030,14 @@ if (attendanceGroupToggle) {
     $('#attendance-group-menu').hidden = expanded;
   });
 }
+const budgetGroupToggle = $('#budget-group-toggle');
+if (budgetGroupToggle) {
+  budgetGroupToggle.addEventListener('click', () => {
+    const expanded = budgetGroupToggle.getAttribute('aria-expanded') === 'true';
+    budgetGroupToggle.setAttribute('aria-expanded', String(!expanded));
+    $('#budget-group-menu').hidden = expanded;
+  });
+}
 $$('.nav-item[data-page]').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
 $$('[data-go]').forEach(button => button.addEventListener('click', () => {
   const dialog = button.closest('dialog');
@@ -987,6 +1060,7 @@ $('#branch-select').addEventListener('change', event => {
   renderBranch();
   toast(`تم عرض بيانات ${academy[currentBranch].name}`);
 });
+$('#budget-month').addEventListener('change', renderMonthlyBudget);
 $('#player-search').addEventListener('input', event => {
   const query = event.target.value.trim();
   $$('#players-table tr').forEach(row => row.hidden = !row.textContent.includes(query));

@@ -202,3 +202,35 @@ dialog{width:min(560px,calc(100% - 30px));padding:28px;border:0;border-radius:16
 .proof-state{display:inline-flex;padding:3px 8px;border-radius:999px;background:var(--green-soft);color:var(--green-dark);font-size:10px;font-weight:900}
 @media(max-width:1100px){.staff-attendance-form{grid-template-columns:1fr 1fr}.staff-attendance-form .btn{width:max-content}}
 @media(max-width:760px){.staff-summary{grid-template-columns:1fr}.staff-summary>div+div{border-right:0;border-top:1px solid var(--line)}.staff-attendance-form{grid-template-columns:1fr;padding:16px 18px 0}.staff-attendance-form .btn{width:100%}}
+
+.monthly-budget{margin-top:20px;padding-bottom:20px}
+.monthly-budget .panel-heading{align-items:end}
+.budget-month-field{width:170px;margin:0;padding-left:24px;font-size:11px}
+.budget-month-field input{min-height:40px;font-variant-numeric:tabular-nums}
+.budget-legend{display:flex;gap:16px;padding:18px 24px 12px;color:var(--muted);font-size:11px;font-weight:800}
+.budget-legend span{display:flex;align-items:center;gap:6px}
+.budget-legend i{width:8px;height:8px;border-radius:50%}
+.budget-legend .visa{background:var(--blue)}
+.budget-legend .account{background:var(--green)}
+.budget-legend .cash{background:var(--orange)}
+.budget-summary-wrap{margin:0 24px;border-radius:10px;box-shadow:none}
+.budget-summary td,.budget-summary th{font-variant-numeric:tabular-nums}
+.budget-total{background:#f2f7f4;color:var(--green-dark);font-weight:900}
+.monthly-budget-records{margin-top:20px}
+.monthly-budget-records .panel-heading{padding:0 0 12px}
+.budget-daily-table{min-width:1380px;white-space:normal}
+.budget-daily-table th,.budget-daily-table td{vertical-align:top}
+.budget-payment-cell{min-width:116px;font-variant-numeric:tabular-nums}
+.budget-payment-cell span{display:block;padding:2px 0;font-size:10px;white-space:nowrap}
+.budget-payment-cell span:nth-child(1){color:var(--blue)}
+.budget-payment-cell span:nth-child(2){color:var(--green-dark)}
+.budget-payment-cell span:nth-child(3){color:#8a551d}
+.budget-note{min-width:155px;color:var(--muted);white-space:normal}
+.annual-budget{padding-bottom:24px}
+.annual-budget-table{min-width:1280px;font-variant-numeric:tabular-nums}
+.annual-budget-table th,.annual-budget-table td{text-align:center}
+.annual-budget-table th:first-child,.annual-budget-table td:first-child{text-align:right;position:sticky;right:0;background:var(--surface)}
+.annual-budget-table tfoot th{background:#edf3ee;color:var(--green-dark);font-size:11px}
+.annual-budget-table tfoot .annual-total{background:var(--green);color:#fff}
+.no-operation{color:var(--muted);background:#f0f1ec;font-size:10px;font-weight:800;white-space:nowrap}
+@media(max-width:760px){.monthly-budget .panel-heading{align-items:flex-start}.budget-month-field{width:100%;padding:0 18px}.budget-legend{padding-inline:18px;flex-wrap:wrap}.budget-summary-wrap{margin-inline:18px}}
