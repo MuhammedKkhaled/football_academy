@@ -2,6 +2,7 @@ const BUS_CAPACITY = 28;
 const SESSION_WEEKDAYS = new Set([0, 3]);
 const ABSENCE_LIMIT = 5;
 const NAV_GROUP_PAGES = ['players', 'disconnected', 'subscriptions', 'buses'];
+const ATTENDANCE_GROUP_PAGES = ['attendance', 'staff-attendance'];
 
 const academy = {
   badr: {
@@ -34,6 +35,12 @@ const branchRecords = {
   badr: {
     attendance: [{name:'يوسف علي',code:'BD-1842',present:true},{name:'زياد محمد',code:'BD-1791',present:true},{name:'أحمد هاني',code:'BD-1755',present:false},{name:'مروان وليد',code:'BD-1698',present:true},{name:'سليم خالد',code:'BD-1652',present:true},{name:'فارس عماد',code:'BD-1629',present:false}],
     coaches: [['ع م','عمر مصطفى','المدرب الرئيسي · وصل 5:42 م','حاضر'],['ك س','كريم سامي','مدرب حراس · لم يسجل بعد','منتظر'],['أ ع','أحمد علاء','مدرب لياقة · لم يسجل بعد','منتظر']],
+    staffAttendance: [
+      { name: 'عمر مصطفى أحمد السيد', role: 'المدرب الرئيسي', type: 'coach', arrival: '17:42', departure: '21:15', photo: true },
+      { name: 'كريم سامي محمد حسن', role: 'مدرب حراس', type: 'coach', arrival: '17:48', departure: '', photo: true },
+      { name: 'سارة منصور علي إبراهيم', role: 'إدارية', type: 'admin', arrival: '10:02', departure: '18:05', photo: true },
+      { name: 'حسام عادل محمود سالم', role: 'مشرف باصات', type: 'admin', arrival: '15:30', departure: '', photo: true }
+    ],
     coachProfiles: [
       { name: 'عمر مصطفى', role: 'المدرب الرئيسي', contract: 'full', salary: 18000, presentDays: 23 },
       { name: 'كريم سامي', role: 'مدرب حراس', contract: 'part', sessionRate: 450, sessions: 14, overtimeRate: 550 },
@@ -62,6 +69,12 @@ const branchRecords = {
   shorouk: {
     attendance: [{name:'آدم شريف',code:'SH-1204',present:true},{name:'عمر ياسر',code:'SH-1188',present:true},{name:'سيف حازم',code:'SH-1152',present:false},{name:'علي أحمد',code:'SH-1097',present:true},{name:'نديم وائل',code:'SH-1021',present:false},{name:'ياسين تامر',code:'SH-0994',present:true}],
     coaches: [['م ر','مروان رجب','المدرب الرئيسي · وصل 5:51 م','حاضر'],['أ ن','أحمد نبيل','مدرب لياقة · لم يسجل بعد','منتظر'],['ي ك','ياسر كمال','مدرب مهارات · لم يسجل بعد','منتظر']],
+    staffAttendance: [
+      { name: 'مروان رجب محمد علي', role: 'المدرب الرئيسي', type: 'coach', arrival: '17:51', departure: '21:20', photo: true },
+      { name: 'أحمد نبيل حسن محمود', role: 'مدرب لياقة', type: 'coach', arrival: '', departure: '', photo: false },
+      { name: 'منى عادل أحمد سالم', role: 'إدارية', type: 'admin', arrival: '09:55', departure: '17:35', photo: true },
+      { name: 'طارق عبد العال سعيد', role: 'مشرف باصات', type: 'admin', arrival: '15:15', departure: '', photo: true }
+    ],
     coachProfiles: [
       { name: 'مروان رجب', role: 'المدرب الرئيسي', contract: 'full', salary: 17000, presentDays: 21 },
       { name: 'أحمد نبيل', role: 'مدرب لياقة', contract: 'part', sessionRate: 470, sessions: 13, overtimeRate: 580 },
@@ -219,9 +232,17 @@ function showPage(name) {
     const active = item.dataset.page === name || (name === 'player-profile' && item.dataset.page === 'players');
     item.classList.toggle('active', active);
   });
-  const inNavGroup = NAV_GROUP_PAGES.includes(name) || name === 'player-profile';
-  $('#nav-group-toggle').classList.toggle('child-active', inNavGroup);
-  if (inNavGroup) setNavGroupExpanded(true);
+  const inPlayersGroup = NAV_GROUP_PAGES.includes(name) || name === 'player-profile';
+  $('#nav-group-toggle').classList.toggle('child-active', inPlayersGroup);
+  if (inPlayersGroup) setNavGroupExpanded(true);
+  const inAttendanceGroup = ATTENDANCE_GROUP_PAGES.includes(name);
+  const attToggle = $('#attendance-group-toggle');
+  if (attToggle) attToggle.classList.toggle('child-active', inAttendanceGroup);
+  if (inAttendanceGroup) {
+    if (attToggle) attToggle.setAttribute('aria-expanded', 'true');
+    const attMenu = $('#attendance-group-menu');
+    if (attMenu) attMenu.hidden = false;
+  }
   $('#sidebar').classList.remove('open');
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
@@ -719,6 +740,29 @@ function renderCoachProfiles() {
   }).join('');
 }
 
+function formatStaffTime(value) {
+  if (!value) return '—';
+  const [hour, minute] = value.split(':').map(Number);
+  return new Intl.DateTimeFormat('ar-EG-u-nu-latn', { hour: 'numeric', minute: '2-digit' }).format(new Date(2000, 0, 1, hour, minute));
+}
+
+function renderStaffAttendance() {
+  const staff = branchRecords[currentBranch].staffAttendance;
+  const coaches = staff.filter(member => member.type === 'coach');
+  const admins = staff.filter(member => member.type === 'admin');
+  const present = group => group.filter(member => member.arrival).length;
+  $('#staff-coaches-count').textContent = `${formatNumber(present(coaches))} / ${formatNumber(coaches.length)}`;
+  $('#staff-admin-count').textContent = `${formatNumber(present(admins))} / ${formatNumber(admins.length)}`;
+  $('#staff-open-count').textContent = formatNumber(staff.filter(member => member.arrival && !member.departure).length);
+  $('#staff-member').innerHTML = staff.map((member, index) => `<option value="${index}">${escapeHtml(member.name)} — ${escapeHtml(member.role)}</option>`).join('');
+  $('#staff-attendance-table').innerHTML = staff.map(member => {
+    const state = !member.arrival ? 'لم يسجل الحضور' : member.departure ? 'مكتمل' : 'بانتظار الانصراف';
+    const stateClass = member.arrival && member.departure ? 'present' : 'late';
+    const proof = typeof member.photo === 'string' ? `<a class="proof-state" href="${escapeHtml(member.photo)}" target="_blank" rel="noopener">عرض الصورة</a>` : member.photo ? '<span class="proof-state">مرفقة</span>' : '—';
+    return `<tr><td><b>${escapeHtml(member.name)}</b></td><td>${escapeHtml(member.role)}</td><td>${formatStaffTime(member.arrival)}</td><td>${formatStaffTime(member.departure)}</td><td>${proof}</td><td><span class="status ${stateClass}">${state}</span></td></tr>`;
+  }).join('');
+}
+
 function renderBranch() {
   const b = academy[currentBranch];
   const seats = seatSummary();
@@ -748,6 +792,7 @@ function renderBranch() {
   renderAttendance();
   renderBranchRecords();
   renderCoachProfiles();
+  renderStaffAttendance();
   renderNotifications();
   updatePlayerPlanUI();
   updateSubscriptionNote();
@@ -912,6 +957,14 @@ $('#menu-btn').addEventListener('click', () => $('#sidebar').classList.toggle('o
 $('#nav-group-toggle').addEventListener('click', () => {
   setNavGroupExpanded($('#nav-group-toggle').getAttribute('aria-expanded') !== 'true');
 });
+const attendanceGroupToggle = $('#attendance-group-toggle');
+if (attendanceGroupToggle) {
+  attendanceGroupToggle.addEventListener('click', () => {
+    const expanded = attendanceGroupToggle.getAttribute('aria-expanded') === 'true';
+    attendanceGroupToggle.setAttribute('aria-expanded', String(!expanded));
+    $('#attendance-group-menu').hidden = expanded;
+  });
+}
 $$('.nav-item[data-page]').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
 $$('[data-go]').forEach(button => button.addEventListener('click', () => {
   const dialog = button.closest('dialog');
@@ -1223,30 +1276,26 @@ $('#mark-all').addEventListener('click', () => {
   renderPlayerProfile();
   toast('تم تسجيل حضور كل اللاعبين في القائمة');
 });
-$$('[data-att-tab]').forEach(button => button.addEventListener('click', () => {
-  $$('[data-att-tab]').forEach(b => b.classList.remove('active'));
-  $$('.attendance-tab').forEach(tab => tab.classList.remove('active'));
-  button.classList.add('active');
-  $(`#${button.dataset.attTab}`).classList.add('active');
-}));
-$('#coach-photo').addEventListener('change', event => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const preview = $('#coach-preview');
-  preview.src = URL.createObjectURL(file);
-  preview.hidden = false;
-  $$('.camera-box > svg, .camera-box > strong, .camera-box > span').forEach(el => el.hidden = true);
+
+
+$('#staff-action').addEventListener('change', event => {
+  $('#staff-time-label').childNodes[0].textContent = event.target.value === 'arrival' ? 'وقت الحضور' : 'وقت الانصراف';
 });
-const coachActionLabel = document.createElement('label');
-coachActionLabel.innerHTML = 'نوع التسجيل<select id="coach-action"><option value="arrival">حضور</option><option value="departure">انصراف</option></select>';
-$('#coach-checkin-form').prepend(coachActionLabel);
-$('#coach-action').addEventListener('change', event => {
-  $('#coach-checkin-form label:nth-of-type(3)').childNodes[0].textContent = event.target.value === 'arrival' ? 'وقت الوصول' : 'وقت الانصراف';
-});
-$('#coach-checkin-form').addEventListener('submit', event => {
+$('#staff-attendance-form').addEventListener('submit', event => {
   event.preventDefault();
-  if (!$('#coach-photo').files.length) return toast('ارفع صورة الإثبات أولًا');
-  toast(`تم تسجيل ${$('#coach-action').value === 'arrival' ? 'حضور' : 'انصراف'} المدرب وإرفاق الصورة`);
+  const member = branchRecords[currentBranch].staffAttendance[Number($('#staff-member').value)];
+  const action = $('#staff-action').value;
+  const time = $('#staff-time').value;
+  if (!member || !time) return toast('اختر الموظف وحدد الوقت');
+  if (!$('#staff-photo').files.length) return toast('ارفع صورة الإثبات أولًا');
+  if (action === 'departure' && !member.arrival) return toast('سجّل الحضور أولًا قبل الانصراف');
+  member[action] = time;
+  // shortcut: proof images live only for this browser session, persist them when a backend is added.
+  member.photo = URL.createObjectURL($('#staff-photo').files[0]);
+  event.target.reset();
+  $('#staff-time-label').childNodes[0].textContent = 'وقت الحضور';
+  renderStaffAttendance();
+  toast(`تم تسجيل ${action === 'arrival' ? 'حضور' : 'انصراف'} ${member.name}`);
 });
 
 $('#transfer-form').addEventListener('submit', event => {
