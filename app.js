@@ -17,7 +17,7 @@ const academy = {
       { name: 'باص 03', route: 'المنطقة 03 ← النادي', supervisor: 'وليد رجب', driver: 'مصطفى كمال', fee: 950, count: 21, players: ['BD-1652'] }
     ],
     extras: [['حذاء تدريب Academy Pro','ملابس ومعدات',1850,14],['تيشيرت الأكاديمية','الزي الرسمي',450,32],['شنطة التدريب','ملابس ومعدات',620,9],['اشتراك الباص','نقل شهري',850,18]],
-    playersList: [['يوسف علي','BD-1842','شهري','92%','باص 01','نشط', '', '', '', 2012, '01012345678', 0],['زياد محمد','BD-1791','بالسيشن','86%','باص 02','متأخر', '', '', '', 2011, '01123456789', 6],['أحمد هاني','BD-1755','شهري','96%','باص 02','نشط', '', '', '', 2010, '01234567890', 1],['مروان وليد','BD-1698','شهري','88%','بدون باص','نشط', '', '', '', 2013, '01098765432', 5],['سليم خالد','BD-1652','بالسيشن','79%','باص 03','متأخر', '', '', '', 2012, '01187654321', 3]]
+    playersList: [['يوسف علي','BD-1842','شهري','92%','باص 01','نشط', '', '', '', 2012, '01012345678', 0],['زياد محمد','BD-1791','بالسيشن','86%','باص 02','متأخر', '', '', '', 2011, '01123456789', 6],['أحمد هاني','BD-1755','شهري','96%','باص 02','نشط', '', '', '', 2010, '01234567890', 1],['مروان وليد','BD-1698','شهري','88%','بدون باص','نشط', '', '', '', 2013, '01098765432', 5],['سليم خالد','BD-1652','بالسيشن','79%','باص 03','متأخر', '', '', '', 2012, '01187654321', 3],['فارس عماد','BD-1629','شهري','80%','بدون باص','نشط', '', '', '', 2012, '01011223344', 2]]
   },
   shorouk: {
     name: 'فرع الشروق', players: 100, active: 82, collection: '78%', collected: '218,900 ج.م', seats: 16, absenceLimit: ABSENCE_LIMIT,
@@ -29,7 +29,7 @@ const academy = {
       { name: 'باص 03', route: 'المنطقة 03 ← النادي', supervisor: 'طارق عبد العال', driver: 'شريف نبيل', fee: 1050, count: 18, players: ['SH-1188'] }
     ],
     extras: [['حذاء تدريب Academy Pro','ملابس ومعدات',2050,8],['تيشيرت الأكاديمية','الزي الرسمي',500,24],['شنطة التدريب','ملابس ومعدات',690,15],['اشتراك الباص','نقل شهري',950,23]],
-    playersList: [['آدم شريف','SH-1204','شهري','94%','باص 01','نشط', '', '', '', 2011, '01055512345', 0],['عمر ياسر','SH-1188','بالسيشن','82%','باص 03','نشط', '', '', '', 2012, '01155512345', 2],['سيف حازم','SH-1152','شهري','77%','باص 02','متأخر', '', '', '', 2010, '01255512345', 5],['علي أحمد','SH-1097','شهري','90%','بدون باص','نشط', '', '', '', 2013, '01055598765', 1],['نديم وائل','SH-1021','بالسيشن','73%','باص 01','متأخر', '', '', '', 2011, '01155598765', 7]]
+    playersList: [['آدم شريف','SH-1204','شهري','94%','باص 01','نشط', '', '', '', 2011, '01055512345', 0],['عمر ياسر','SH-1188','بالسيشن','82%','باص 03','نشط', '', '', '', 2012, '01155512345', 2],['سيف حازم','SH-1152','شهري','77%','باص 02','متأخر', '', '', '', 2010, '01255512345', 5],['علي أحمد','SH-1097','شهري','90%','بدون باص','نشط', '', '', '', 2013, '01055598765', 1],['نديم وائل','SH-1021','بالسيشن','73%','باص 01','متأخر', '', '', '', 2011, '01155598765', 7],['ياسين تامر','SH-0994','شهري','85%','بدون باص','نشط', '', '', '', 2012, '01099887766', 1]]
   }
 };
 
@@ -73,7 +73,7 @@ const branchRecords = {
     ],
     payments: [['ي ع','يوسف علي','متأخر 9 أيام','1,250 ج.م'],['ز م','زياد محمد','متأخر 6 أيام','900 ج.م'],['م و','مروان وليد','يستحق اليوم','1,250 ج.م']],
     budget: makeYearBudget(1),
-    transactions: [['اشتراك يوسف علي','اشتراكات','13 نوفمبر','InstaPay','+1,250 ج.م','in','مؤكد'],['صيانة باص 02','نقل','12 نوفمبر','نقدي','−3,400 ج.م','out','معتمد'],['شراء 12 كرة تدريب','متنوعات','11 نوفمبر','تحويل بنكي','−8,600 ج.م','out','للمراجعة']],
+    transactions: [['اشتراك يوسف علي','اشتراكات','13 نوفمبر','انستا باي','+1,250 ج.م','in','مؤكد'],['صيانة باص 02','نقل','12 نوفمبر','نقدي','−3,400 ج.م','out','معتمد'],['شراء 12 كرة تدريب','متنوعات','11 نوفمبر','تحويل بنكي','−8,600 ج.م','out','للمراجعة']],
     closings: { [dayKey(-1)]: { admin: 'محمد الصعيدي', at: '9:40 م' } },
     receipts: [
       { date: dayKey(0), time: '10:20 ص', method: 'انستا باي', amount: 1500, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهري + شنطة', total: 1750, remaining: 250, dueDate: dayKey(7) },
@@ -84,7 +84,7 @@ const branchRecords = {
       { date: dayKey(0), time: '4:10 م', method: 'انستا باي', amount: 1000, admin: 'محمد الصعيدي', player: 'زياد محمد', note: 'دفعة متأخرة' },
       { date: dayKey(0), time: '5:20 م', method: 'فيزا', amount: 400, admin: 'سارة منصور', player: 'فارس عماد', note: 'شنطة التدريب' },
       { date: dayKey(0), time: '6:05 م', method: 'نقدي', amount: 750, admin: 'خالد فؤاد', player: 'لاعب زائر', note: 'سيشن تجريبي' },
-      { date: dayKey(0), time: '7:15 م', method: 'انستا باي', amount: 1000, admin: 'خالد فؤاد', player: 'ولي أمر — أحمد هاني', note: 'اشتراك باص' },
+      { date: dayKey(0), time: '7:15 م', method: 'انستا باي', amount: 1000, admin: 'خالد فؤاد', player: 'ولي أمر، أحمد هاني', note: 'اشتراك باص' },
       { date: dayKey(0), time: '8:40 م', method: 'انستا باي', amount: 1250, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهر قادم' },
       { date: dayKey(-1), time: '10:10 ص', method: 'انستا باي', amount: 1250, admin: 'محمد الصعيدي', player: 'يوسف علي', note: 'اشتراك شهري' },
       { date: dayKey(-1), time: '12:30 م', method: 'نقدي', amount: 1000, admin: 'خالد فؤاد', player: 'سليم خالد', note: 'اشتراك باص' },
@@ -126,13 +126,13 @@ const branchRecords = {
 
 const notifications = {
   badr: [
-    { id: 'bd-late', type: 'late', title: 'اشتراك متأخر', text: 'يوسف علي متأخر 9 أيام — 1,250 ج.م', time: 'اليوم · 9:20 ص', page: 'subscriptions', read: false },
+    { id: 'bd-late', type: 'late', title: 'اشتراك متأخر', text: 'يوسف علي متأخر 9 أيام، 1,250 ج.م', time: 'اليوم · 9:20 ص', page: 'subscriptions', read: false },
     { id: 'bd-capacity', type: 'capacity', title: 'باص 02 يقترب من السعة', text: 'متبقٍ مقعد واحد فقط من أصل 28', time: 'اليوم · 8:45 ص', page: 'buses', read: false },
     { id: 'bd-new', type: 'new', title: 'اشتراك جديد', text: 'تم تسجيل اشتراك شهري جديد في فرع بدر', time: 'أمس · 6:10 م', page: 'players', read: false },
     { id: 'bd-expiry', type: 'expiry', title: 'اشتراك ينتهي قريبًا', text: '3 اشتراكات تنتهي خلال 5 أيام', time: 'أمس · 2:00 م', page: 'subscriptions', read: true }
   ],
   shorouk: [
-    { id: 'sh-late', type: 'late', title: 'دفعة تحتاج متابعة', text: 'سيف حازم متأخر 7 أيام — 1,450 ج.م', time: 'اليوم · 10:05 ص', page: 'subscriptions', read: false },
+    { id: 'sh-late', type: 'late', title: 'دفعة تحتاج متابعة', text: 'سيف حازم متأخر 7 أيام، 1,450 ج.م', time: 'اليوم · 10:05 ص', page: 'subscriptions', read: false },
     { id: 'sh-expiry', type: 'expiry', title: 'اشتراك ينتهي قريبًا', text: 'اشتراكان ينتهيان قبل نهاية الأسبوع', time: 'اليوم · 9:10 ص', page: 'subscriptions', read: false },
     { id: 'sh-new', type: 'new', title: 'لاعب جديد', text: 'تمت إضافة لاعب جديد إلى فرع الشروق', time: 'أمس · 5:30 م', page: 'players', read: true }
   ]
@@ -148,7 +148,9 @@ const DEMO_GUARDIANS = {
   'SH-1188': 'ياسر فتحي',
   'SH-1152': 'حازم سعيد',
   'SH-1097': 'أحمد كامل',
-  'SH-1021': 'وائل منصور'
+  'SH-1021': 'وائل منصور',
+  'BD-1629': 'عماد فاروق',
+  'SH-0994': 'تامر ياسر'
 };
 
 Object.values(academy).forEach(branch => {
@@ -295,8 +297,58 @@ function planCardsMarkup(plans) {
   return `<article class="price-plan recommended"><span>اشتراك شهري</span><strong>${formatNumber(plans.monthly)} <small>ج.م / شهر</small></strong><b>الأكثر اختيارًا</b><small>قيمة ثابتة مهما كان الشهر 28 أو 30 أو 31 يومًا.</small></article><article class="price-plan"><span>اشتراك بالسيشن</span><strong>${formatNumber(plans.session)} <small>ج.م / سيشن</small></strong><b>${monthInfo ? `${monthInfo.total} سيشن في ${monthInfo.label}` : 'سيشنان أسبوعيًا'}</b><small>سيشنان كل أسبوع، ويُحسب عدد السيشنات الفعلي حسب الشهر.</small></article>`;
 }
 
+function playerIsDisconnected(branch, player) {
+  return Number(player[11] || 0) >= Number(branch.absenceLimit || ABSENCE_LIMIT);
+}
+
 function isDisconnected(player) {
-  return Number(player[11] || 0) >= Number(academy[currentBranch].absenceLimit || ABSENCE_LIMIT);
+  return playerIsDisconnected(academy[currentBranch], player);
+}
+
+function registerStats(branch) {
+  const list = branch.playersList;
+  const active = list.filter(player => player[5] === 'نشط' && !playerIsDisconnected(branch, player)).length;
+  return {
+    players: list.length,
+    active,
+    monthly: list.filter(player => player[2] === 'شهري').length,
+    session: list.filter(player => player[2] === 'بالسيشن').length
+  };
+}
+
+function syncAttendanceRoster(branchKey) {
+  const branch = academy[branchKey];
+  const existing = new Map((branchRecords[branchKey].attendance || []).map(item => [item.code, item]));
+  branchRecords[branchKey].attendance = branch.playersList.map(player => {
+    const prior = existing.get(player[1]);
+    return { name: player[0], code: player[1], present: prior ? Boolean(prior.present) : false };
+  });
+}
+
+function syncAllAttendance() {
+  Object.keys(academy).forEach(syncAttendanceRoster);
+}
+
+let confirmResolver = null;
+
+function askConfirm({ title, body, accept }) {
+  return new Promise(resolve => {
+    confirmResolver = resolve;
+    $('#confirm-title').textContent = title;
+    $('#confirm-body').textContent = body;
+    const acceptButton = $('#confirm-accept');
+    acceptButton.textContent = accept;
+    acceptButton.disabled = false;
+    $('#confirm-dialog').showModal();
+  });
+}
+
+function finishConfirm(accepted) {
+  const resolve = confirmResolver;
+  confirmResolver = null;
+  const dialog = $('#confirm-dialog');
+  if (dialog?.open) dialog.close();
+  if (resolve) resolve(accepted);
 }
 
 function playerAge(player) {
@@ -407,12 +459,28 @@ function renderPlayers() {
     const outstanding = playerOutstanding(player[0]);
     const dueNote = outstanding.remaining > 0 ? `<small class="due-note">متبقي ${formatCurrency(outstanding.remaining)}${outstanding.periodLabel ? ` من ${escapeHtml(outstanding.periodLabel)}` : ''}${outstanding.dueDate ? ` · يستحق ${formatDayLabel(outstanding.dueDate)}` : ''}</small>` : '';
     const disconnected = isDisconnected(player);
-    return `<tr>
+    return `<tr data-player-code="${escapeHtml(player[1])}" data-status="${escapeHtml(player[5])}">
     <td><div class="player-cell"><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(player[0]))}</span><div><b>${escapeHtml(player[0])}</b><small>${age} سنة · ${escapeHtml(ageGroupLabel(player))}</small></div></div></td>
     <td>${escapeHtml(player[1])}</td><td>${phoneMarkup(player[10])}</td><td><div class="plan-cell"><span>${escapeHtml(player[2])}</span>${planDetail}${dueNote}</div></td><td>${escapeHtml(player[3])}</td><td>${escapeHtml(player[4])}</td>
     <td><div class="status-stack"><span class="status ${player[5] === 'نشط' ? 'present' : 'late'}">${escapeHtml(player[5])}</span>${disconnected ? '<span class="status disconnected">منقطع</span>' : ''}</div></td>
     <td><button class="btn btn-quiet btn-small" type="button" data-profile="${escapeHtml(player[1])}">الملف</button></td></tr>`;
-  }).join('');
+  }).join('') + '<tr id="players-empty" hidden><td colspan="8"><div class="empty-state">لا يوجد لاعبون يطابقون البحث أو الحالة.</div></td></tr>';
+  applyPlayerFilters();
+}
+
+function applyPlayerFilters() {
+  const query = ($('#player-search')?.value || '').trim();
+  const status = $('#player-status-filter')?.value || '';
+  const rows = $$('#players-table tr[data-player-code]');
+  let visible = 0;
+  rows.forEach(row => {
+    const matchesQuery = !query || row.textContent.includes(query);
+    const matchesStatus = !status || row.dataset.status === status;
+    row.hidden = !(matchesQuery && matchesStatus);
+    if (!row.hidden) visible += 1;
+  });
+  const empty = $('#players-empty');
+  if (empty) empty.hidden = visible !== 0 || rows.length === 0;
 }
 
 function renderDisconnected() {
@@ -641,7 +709,7 @@ function updatePaymentPreview() {
 
 function preparePaymentDialog() {
   const players = academy[currentBranch].playersList;
-  $('#payment-player').innerHTML = players.map(player => `<option value="${escapeHtml(player[1])}">${escapeHtml(player[0])} — ${escapeHtml(player[1])}</option>`).join('');
+  $('#payment-player').innerHTML = players.map(player => `<option value="${escapeHtml(player[1])}">${escapeHtml(player[0])}، ${escapeHtml(player[1])}</option>`).join('');
   $('#payment-paid').value = '';
   $('#payment-due').value = '';
   fillPaymentDefaults();
@@ -764,7 +832,7 @@ function renderBuses() {
   }).join('') || '<div class="empty-state">لا توجد باصات في هذا الفرع بعد.</div>';
 
   const assignedPlayers = academy[currentBranch].playersList.map((player, i) => ({ player, i })).filter(item => item.player[4] !== 'بدون باص');
-  $('#transfer-player').innerHTML = assignedPlayers.length ? assignedPlayers.map(({ player, i }) => `<option value="${i}">${escapeHtml(player[0])} — ${escapeHtml(player[4])}</option>`).join('') : '<option value="" disabled>لا يوجد لاعبون على الباصات</option>';
+  $('#transfer-player').innerHTML = assignedPlayers.length ? assignedPlayers.map(({ player, i }) => `<option value="${i}">${escapeHtml(player[0])}، ${escapeHtml(player[4])}</option>`).join('') : '<option value="" disabled>لا يوجد لاعبون على الباصات</option>';
   $('#transfer-bus').innerHTML = buses.map((bus, i) => `<option value="${i}">${escapeHtml(bus.name)}</option>`).join('');
 }
 
@@ -876,8 +944,8 @@ function renderCoachSalaries() {
   $('#coach-salary-unpaid-count').textContent = `${formatNumber(snap.unpaidRows.length)} مدرب`;
   $('#coach-salary-table').innerHTML = rows.length ? rows.map(row => {
     const contract = row.contract === 'full'
-      ? '<span class="contract full">Full-time</span>'
-      : '<span class="contract part">Part-time</span>';
+      ? '<span class="contract full">راتب شهري</span>'
+      : '<span class="contract part">بالسيشن</span>';
   const hoursCell = row.contract === 'full'
       ? '—'
       : `${formatNumber(row.workedHours)} ساعة${row.sessions ? ` · ${formatNumber(row.sessions)} سيشن` : ''}`;
@@ -898,7 +966,7 @@ function renderCoachSalaries() {
 function renderCoachProfiles() {
   const profiles = branchRecords[currentBranch].coachProfiles;
   $('#coach-grid').innerHTML = profiles.map((coach, i) => {
-    const contract = coach.contract === 'full' ? '<span class="contract full">Full-time</span>' : '<span class="contract part">Part-time</span>';
+    const contract = coach.contract === 'full' ? '<span class="contract full">راتب شهري</span>' : '<span class="contract part">بالسيشن</span>';
     const details = coach.contract === 'full'
       ? `<div><dt>الراتب الشهري</dt><dd>${formatCurrency(coach.salary)}</dd></div><div><dt>حضور الشهر</dt><dd>${formatNumber(coach.presentDays)} يومًا</dd></div>`
       : `<div><dt>سعر السيشن</dt><dd>${formatCurrency(coach.sessionRate)}</dd></div><div><dt>سيشنات الشهر</dt><dd>${formatNumber(coach.sessions)}</dd></div><div><dt>السيشن الإضافي</dt><dd>${formatCurrency(coach.overtimeRate)}</dd></div>`;
@@ -920,7 +988,7 @@ function renderStaffAttendance() {
   $('#staff-coaches-count').textContent = `${formatNumber(present(coaches))} / ${formatNumber(coaches.length)}`;
   $('#staff-admin-count').textContent = `${formatNumber(present(admins))} / ${formatNumber(admins.length)}`;
   $('#staff-open-count').textContent = formatNumber(staff.filter(member => member.arrival && !member.departure).length);
-  $('#staff-member').innerHTML = staff.map((member, index) => `<option value="${index}">${escapeHtml(member.name)} — ${escapeHtml(member.role)}</option>`).join('');
+  $('#staff-member').innerHTML = staff.map((member, index) => `<option value="${index}">${escapeHtml(member.name)}، ${escapeHtml(member.role)}</option>`).join('');
   $('#staff-attendance-table').innerHTML = staff.map(member => {
     const state = !member.arrival ? 'لم يسجل الحضور' : member.departure ? 'مكتمل' : 'بانتظار الانصراف';
     const stateClass = member.arrival && member.departure ? 'present' : 'late';
@@ -953,7 +1021,7 @@ function renderAnnualBudget() {
     return { name: branch.name, months, total: months.reduce((sum, amount) => sum + amount, 0) };
   });
   const monthTotals = Array.from({length: 10}, (_, index) => branchRows.reduce((sum, branch) => sum + branch.months[index], 0));
-  $('#annual-budget-year').textContent = formatNumber(year);
+  $('#annual-budget-year').textContent = String(year);
   $('#annual-budget-table').innerHTML = branchRows.map(branch => `<tr><td><b>${escapeHtml(branch.name)}</b></td>${branch.months.map(amount => `<td>${formatCurrency(amount)}</td>`).join('')}<td class="no-operation">غير تشغيلي</td><td class="no-operation">غير تشغيلي</td><td class="budget-total">${formatCurrency(branch.total)}</td></tr>`).join('');
   $('#annual-budget-total').innerHTML = `<tr><th>إجمالي الشهر</th>${monthTotals.map(amount => `<th>${formatCurrency(amount)}</th>`).join('')}<th class="no-operation">—</th><th class="no-operation">—</th><th class="annual-total">${formatCurrency(monthTotals.reduce((sum, amount) => sum + amount, 0))}</th></tr>`;
 }
@@ -961,17 +1029,38 @@ function renderAnnualBudget() {
 function renderBranch() {
   const b = academy[currentBranch];
   const seats = seatSummary();
+  const stats = registerStats(b);
   $$('[data-branch-name]').forEach(el => el.textContent = b.name);
-  $$('[data-metric]').forEach(el => el.textContent = el.dataset.metric === 'seats' ? formatNumber(seats.available) : b[el.dataset.metric]);
-  $('[data-delta="active"]').textContent = `${Math.round(b.active / b.players * 100)}% من اللاعبين`;
+  $$('[data-metric]').forEach(el => {
+    if (el.dataset.metric === 'seats') el.textContent = formatNumber(seats.available);
+    else if (el.dataset.metric === 'players') el.textContent = formatNumber(stats.players);
+    else if (el.dataset.metric === 'active') el.textContent = formatNumber(stats.active);
+    else el.textContent = b[el.dataset.metric];
+  });
+  $('[data-delta="players"]').textContent = 'في سجل الفرع';
+  $('[data-delta="active"]').textContent = stats.players ? `${Math.round(stats.active / stats.players * 100)}% من اللاعبين` : 'لا يوجد لاعبون';
   $('[data-delta="collection"]').textContent = b.collected;
   $('[data-delta="seats"]').textContent = `من أصل ${formatNumber(seats.capacity)} مقعد`;
-  $('[data-plan="monthly"]').textContent = `${b.plans.monthlyCount} لاعب`;
-  $('[data-plan="session"]').textContent = `${b.plans.sessionCount} لاعب`;
-  $('[data-plan="paused"]').textContent = `${b.plans.paused} لاعب`;
-  $('.donut b').textContent = b.active;
-  $('.donut').setAttribute('aria-label', `${Math.round(b.plans.monthlyCount / b.active * 100)} بالمئة اشتراك شهري`);
-  $$('[data-attendance]').forEach(el => el.textContent = b.attendance[el.dataset.attendance]);
+  const playersBadge = $('#players-nav-count');
+  if (playersBadge) playersBadge.textContent = formatNumber(stats.players);
+  $$('[data-branch-players]').forEach(el => {
+    el.textContent = formatNumber(registerStats(academy[el.dataset.branchPlayers]).players);
+  });
+  $('[data-plan="monthly"]').textContent = `${formatNumber(stats.monthly)} لاعب`;
+  $('[data-plan="session"]').textContent = `${formatNumber(stats.session)} لاعب`;
+  $('[data-plan="paused"]').textContent = '0 لاعب';
+  const monthlyPct = stats.players ? (stats.monthly / stats.players) * 100 : 0;
+  const sessionPct = stats.players ? (stats.session / stats.players) * 100 : 0;
+  $('.donut b').textContent = formatNumber(stats.active);
+  $('.donut').style.background = `conic-gradient(var(--green) 0 ${monthlyPct}%, var(--orange) ${monthlyPct}% ${monthlyPct + sessionPct}%, var(--line) ${monthlyPct + sessionPct}% 100%)`;
+  $('.donut').setAttribute('aria-label', `${Math.round(monthlyPct)} بالمئة اشتراك شهري`);
+  const roster = branchRecords[currentBranch].attendance;
+  const present = roster.filter(item => item.present).length;
+  const coaches = branchRecords[currentBranch].staffAttendance.filter(member => member.type === 'coach');
+  const coachesIn = coaches.filter(member => member.arrival).length;
+  $('[data-attendance="players"]').textContent = formatNumber(present);
+  $('[data-attendance="coaches"]').textContent = coaches.length ? `${coachesIn}/${coaches.length}` : '0/0';
+  $('[data-attendance="rate"]').textContent = roster.length ? `${Math.round(present / roster.length * 100)}%` : '0%';
   $('#revenue-total').innerHTML = `${b.collected.replace(' ج.م','')} <small>ج.م</small>`;
   $('#finance-income').textContent = b.finance.income;
   $('#finance-expenses').textContent = b.finance.expenses;
@@ -998,7 +1087,7 @@ function renderBranch() {
 
 function renderAttendance() {
   const attendancePlayers = branchRecords[currentBranch].attendance;
-  $('#attendance-roster').innerHTML = attendancePlayers.map((player, i) => `<div class="roster-row"><span class="avatar a${(i%3)+1}">${escapeHtml(initials(player.name))}</span><div><b>${escapeHtml(player.name)}</b><small>${escapeHtml(player.code)}</small></div><button class="attendance-toggle ${player.present?'present':''}" data-attendance-index="${i}">${player.present?'حاضر':'تسجيل حضور'}</button></div>`).join('');
+  $('#attendance-roster').innerHTML = attendancePlayers.length ? attendancePlayers.map((player, i) => `<div class="roster-row"><span class="avatar a${(i%3)+1}">${escapeHtml(initials(player.name))}</span><div><b>${escapeHtml(player.name)}</b><small>${escapeHtml(player.code)}</small></div><button type="button" class="attendance-toggle ${player.present?'present':''}" data-attendance-index="${i}" aria-pressed="${player.present ? 'true' : 'false'}">${player.present?'حاضر':'تسجيل حضور'}</button></div>`).join('') : '<p class="empty-state">لا يوجد لاعبون في سجل هذا الفرع.</p>';
   $('#attendance-count').textContent = `${attendancePlayers.filter(p => p.present).length} من ${attendancePlayers.length}`;
 }
 
@@ -1051,7 +1140,7 @@ function updateSubscriptionNote() {
   syncMonthlyDebtAmount($('#sub-monthly-debt-period'), $('#sub-monthly-debt-amount'));
   note.textContent = isMonthly
     ? `الفترة: ${monthInfo?.label || 'الشهر الحالي'} · ${formatCurrency(plans.monthly)}. إن كان عليه متبقي من هذا الشهر أو الشهر الماضي سجّله قبل التأكيد.`
-    : `${monthInfo ? `${monthInfo.total} سيشن في ${monthInfo.label}` : 'سيشنان أسبوعيًا'} · ${formatCurrency(plans.session)} للسيشن — يُحسب الحضور الفعلي.`;
+    : `${monthInfo ? `${monthInfo.total} سيشن في ${monthInfo.label}` : 'سيشنان أسبوعيًا'} · ${formatCurrency(plans.session)} للسيشن، يُحسب الحضور الفعلي.`;
 }
 
 function renderNotifications() {
@@ -1092,7 +1181,7 @@ function preparePlayerDialog() {
 function prepareSubscriptionDialog() {
   const select = $('#subscription-player');
   const players = academy[currentBranch].playersList;
-  select.innerHTML = players.map(player => `<option value="${escapeHtml(player[1])}">${escapeHtml(player[0])} — ${escapeHtml(player[1])} · ${escapeHtml(player[2])}</option>`).join('');
+  select.innerHTML = players.map(player => `<option value="${escapeHtml(player[1])}">${escapeHtml(player[0])}، ${escapeHtml(player[1])} · ${escapeHtml(player[2])}</option>`).join('');
   const form = $('#subscription-form');
   if (form) form.elements.plan.value = 'monthly';
   const period = $('#sub-monthly-debt-period');
@@ -1134,6 +1223,8 @@ function updateCoachContractFields() {
   $$('#coach-full-fields input').forEach(input => input.disabled = part);
   $$('#coach-part-fields input').forEach(input => input.disabled = !part);
 }
+
+syncAllAttendance();
 
 $('#login-form').addEventListener('submit', event => {
   event.preventDefault();
@@ -1187,6 +1278,8 @@ $$('[data-go]').forEach(button => button.addEventListener('click', () => {
 }));
 $$('[data-open]').forEach(button => button.addEventListener('click', () => {
   const id = button.dataset.open;
+  const parent = button.closest('dialog');
+  if (parent && parent.id !== id) parent.close();
   if (id === 'bus-dialog') prepareBusDialog();
   if (id === 'coach-dialog') prepareCoachDialog();
   if (id === 'player-dialog') preparePlayerDialog();
@@ -1194,6 +1287,34 @@ $$('[data-open]').forEach(button => button.addEventListener('click', () => {
   $(`#${id}`).showModal();
 }));
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
+$('#confirm-accept').addEventListener('click', () => {
+  if ($('#confirm-accept').disabled) return;
+  $('#confirm-accept').disabled = true;
+  finishConfirm(true);
+});
+$('#confirm-dialog').addEventListener('close', () => {
+  if (!confirmResolver) return;
+  const resolve = confirmResolver;
+  confirmResolver = null;
+  resolve(false);
+});
+$('#expense-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.target;
+  const data = new FormData(form);
+  const note = String(data.get('note') || '').trim();
+  const amount = Number(data.get('amount'));
+  const method = String(data.get('method') || 'نقدي');
+  if (!note) return toast('اكتب بيان المصروف');
+  if (!Number.isFinite(amount) || amount <= 0) return toast('أدخل مبلغ مصروف أكبر من صفر');
+  const dateLabel = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', month: 'long' }).format(new Date());
+  branchRecords[currentBranch].transactions.unshift([note, 'مصروفات', dateLabel, method, `−${formatNumber(amount)} ج.م`, 'out', 'للمراجعة']);
+  form.reset();
+  form.closest('dialog').close();
+  renderBranchRecords();
+  showPage('finance');
+  toast(`تم تسجيل مصروف ${formatCurrency(amount)} في ${academy[currentBranch].name}`);
+});
 
 $('#branch-select').addEventListener('change', event => {
   currentBranch = event.target.value;
@@ -1215,7 +1336,7 @@ $('#coach-salary-export')?.addEventListener('click', () => {
       row.name,
       row.role,
       formatMonth(row.month),
-      row.contract === 'full' ? 'Full-time' : 'Part-time',
+      row.contract === 'full' ? 'راتب شهري' : 'بالسيشن',
       row.contract === 'full' ? '' : row.workedHours,
       row.contract === 'full' ? '' : row.hourlyRate,
       row.absenceHours,
@@ -1224,10 +1345,8 @@ $('#coach-salary-export')?.addEventListener('click', () => {
     ])
   ]);
 });
-$('#player-search').addEventListener('input', event => {
-  const query = event.target.value.trim();
-  $$('#players-table tr').forEach(row => row.hidden = !row.textContent.includes(query));
-});
+$('#player-search').addEventListener('input', applyPlayerFilters);
+$('#player-status-filter').addEventListener('change', applyPlayerFilters);
 $('#disconnected-search').addEventListener('input', event => {
   const query = event.target.value.trim();
   $$('#disconnected-table tr').forEach(row => row.hidden = !row.textContent.includes(query));
@@ -1255,11 +1374,18 @@ $('#disconnected-table').addEventListener('click', event => {
   if (!button) return;
   const record = academy[currentBranch].playersList.find(player => player[1] === button.dataset.reactivate);
   if (!record) return;
-  record[11] = 0;
-  renderDisconnected();
-  renderPlayers();
-  renderPlayerProfile();
-  toast(`تمت إعادة تفعيل ${record[0]} وتصفير عدد الغياب`);
+  askConfirm({
+    title: `إعادة تفعيل ${record[0]}؟`,
+    body: `عدد الغياب الحالي ${formatNumber(record[11] || 0)}. ستُصفّر الغيابات ويعود اللاعب إلى السجل النشط في ${academy[currentBranch].name}.`,
+    accept: 'إعادة تفعيل'
+  }).then(ok => {
+    if (!ok) return;
+    record[11] = 0;
+    renderDisconnected();
+    renderPlayers();
+    renderPlayerProfile();
+    toast(`تمت إعادة تفعيل ${record[0]} وتصفير عدد الغياب`);
+  });
 });
 $('#player-profile-back').addEventListener('click', () => showPage(profileReturnPage || 'players'));
 $('#disconnected-export').addEventListener('click', () => {
@@ -1298,7 +1424,7 @@ $('#closing-export').addEventListener('click', () => {
     ['تقرير التقفيل اليومي'],
     ['الفرع', branchName],
     ['اليوم', formatDayLabel(closingDate)],
-    ['الحالة', closing ? `مقفل — ${closing.admin} — ${closing.at}` : 'مفتوح'],
+    ['الحالة', closing ? `مقفل، ${closing.admin}، ${closing.at}` : 'مفتوح'],
     [],
     ['الوقت', 'البيان', 'ملاحظة', 'طريقة الدفع', 'المبلغ', 'المتبقي', 'تاريخ الاستحقاق', 'الإداري', 'الفرع', 'التاريخ'],
     ...receipts.map(item => [item.time, item.player, item.note, item.method, item.amount, item.remaining > 0 ? item.remaining : '', item.remaining > 0 ? item.dueDate : '', item.admin, branchName, item.date]),
@@ -1309,23 +1435,40 @@ $('#closing-export').addEventListener('click', () => {
 });
 $('#closing-close-btn').addEventListener('click', () => {
   const records = branchRecords[currentBranch];
+  const branchName = academy[currentBranch].name;
   if (records.closings[closingDate]) {
-    delete records.closings[closingDate];
-    renderClosing();
-    toast(`تم إعادة فتح ${formatDayLabel(closingDate)}`);
+    const closed = records.closings[closingDate];
+    askConfirm({
+      title: `إعادة فتح ${formatDayLabel(closingDate)}؟`,
+      body: `اليوم مقفل بواسطة ${closed.admin} في ${branchName}. إعادة الفتح تسمح بتعديل مقبوضات هذا اليوم.`,
+      accept: 'إعادة فتح اليوم'
+    }).then(ok => {
+      if (!ok) return;
+      delete records.closings[closingDate];
+      renderClosing();
+      toast(`تم إعادة فتح ${formatDayLabel(closingDate)}`);
+    });
     return;
   }
-  const total = records.receipts.filter(item => item.date === closingDate).reduce((sum, item) => sum + item.amount, 0);
+  const dayReceipts = records.receipts.filter(item => item.date === closingDate);
+  const total = dayReceipts.reduce((sum, item) => sum + item.amount, 0);
   if (!total) {
     toast('لا توجد مقبوضات لتقفيل هذا اليوم');
     return;
   }
-  records.closings[closingDate] = {
-    admin: 'محمد الصعيدي',
-    at: new Date().toLocaleTimeString('ar-EG-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
-  };
-  renderClosing();
-  toast(`تم تقفيل ${formatDayLabel(closingDate)} بإجمالي ${formatCurrency(total)}`);
+  askConfirm({
+    title: `تقفيل ${formatDayLabel(closingDate)}؟`,
+    body: `إجمالي المقبوضات ${formatCurrency(total)} من ${formatNumber(dayReceipts.length)} عملية في ${branchName}.`,
+    accept: 'تقفيل اليوم'
+  }).then(ok => {
+    if (!ok) return;
+    records.closings[closingDate] = {
+      admin: 'محمد الصعيدي',
+      at: new Date().toLocaleTimeString('ar-EG-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+    };
+    renderClosing();
+    toast(`تم تقفيل ${formatDayLabel(closingDate)} بإجمالي ${formatCurrency(total)}`);
+  });
 });
 
 $('#player-form').addEventListener('submit', event => {
@@ -1368,10 +1511,7 @@ $('#player-form').addEventListener('submit', event => {
     trackCarryoverPayment(player, monthlyDebt.amount, monthlyDebt.period);
   }
   branch.playersList.unshift(player);
-  branch.players++;
-  branch.active++;
-  if (plan === 'monthly') branch.plans.monthlyCount++;
-  else branch.plans.sessionCount++;
+  syncAttendanceRoster(currentBranch);
   form.reset();
   preparePlayerDialog();
   renderBranch();
@@ -1450,7 +1590,7 @@ $('#payment-form').addEventListener('submit', event => {
     amount: paid,
     admin: 'محمد الصعيدي',
     player: player[0],
-    note: remaining > 0 ? `اشتراك — دفعة جزئية من ${formatCurrency(total)}` : 'سداد اشتراك بالكامل',
+    note: remaining > 0 ? `اشتراك، دفعة جزئية من ${formatCurrency(total)}` : 'سداد اشتراك بالكامل',
     total,
     remaining,
     dueDate,
@@ -1461,7 +1601,7 @@ $('#payment-form').addEventListener('submit', event => {
   player[5] = remaining > 0 ? 'متأخر' : 'نشط';
   records.receipts.push(receipt);
   if (remaining > 0) {
-    records.payments.unshift([initials(player[0]), player[0], `متبقي ${formatCurrency(remaining)} — يستحق ${formatDayLabel(dueDate)}`, formatCurrency(remaining)]);
+    records.payments.unshift([initials(player[0]), player[0], `متبقي ${formatCurrency(remaining)}، يستحق ${formatDayLabel(dueDate)}`, formatCurrency(remaining)]);
     if (records.payments.length > 4) records.payments.length = 4;
   }
   closingDate = dayKey(0);
@@ -1488,30 +1628,61 @@ function adjustAbsence(code, delta) {
   record[11] = Math.max(0, Number(record[11] || 0) + delta);
 }
 
+function commitAttendance(player, present) {
+  player.present = present;
+  adjustAbsence(player.code, present ? -1 : 1);
+  syncTodayAttendance(player.code, present);
+  renderAttendance();
+  renderPlayers();
+  renderDisconnected();
+  renderPlayerProfile();
+}
+
 $('#attendance-roster').addEventListener('click', event => {
   const button = event.target.closest('[data-attendance-index]');
   if (!button) return;
   const player = branchRecords[currentBranch].attendance[button.dataset.attendanceIndex];
-  player.present = !player.present;
-  adjustAbsence(player.code, player.present ? -1 : 1);
-  syncTodayAttendance(player.code, player.present);
-  renderAttendance();
-  renderPlayers();
-  renderDisconnected();
-  renderPlayerProfile();
+  if (!player) return;
+  const nextPresent = !player.present;
+  if (nextPresent) {
+    commitAttendance(player, true);
+    return;
+  }
+  const record = academy[currentBranch].playersList.find(item => item[1] === player.code);
+  const nextAbsences = Number(record?.[11] || 0) + 1;
+  const limit = Number(academy[currentBranch].absenceLimit || ABSENCE_LIMIT);
+  if (!record || nextAbsences < limit) {
+    commitAttendance(player, false);
+    return;
+  }
+  askConfirm({
+    title: `تسجيل غياب ${player.name}؟`,
+    body: `سيصل غيابه إلى ${formatNumber(nextAbsences)}، وهو حد الانقطاع في ${academy[currentBranch].name}. سيظهر في اللاعبون المنقطعون.`,
+    accept: 'تسجيل الغياب'
+  }).then(ok => {
+    if (ok) commitAttendance(player, false);
+  });
 });
 $('#mark-all').addEventListener('click', () => {
-  branchRecords[currentBranch].attendance.forEach(player => {
-    if (player.present) return;
-    player.present = true;
-    adjustAbsence(player.code, -1);
-    syncTodayAttendance(player.code, true);
+  const pending = branchRecords[currentBranch].attendance.filter(player => !player.present);
+  if (!pending.length) return toast('كل اللاعبين في هذه الحصة حاضرون');
+  askConfirm({
+    title: 'تحضير كل اللاعبين؟',
+    body: `سيتم تسجيل حضور ${formatNumber(pending.length)} لاعب في ${academy[currentBranch].name}.`,
+    accept: 'تحضير الكل'
+  }).then(ok => {
+    if (!ok) return;
+    pending.forEach(player => {
+      player.present = true;
+      adjustAbsence(player.code, -1);
+      syncTodayAttendance(player.code, true);
+    });
+    renderAttendance();
+    renderPlayers();
+    renderDisconnected();
+    renderPlayerProfile();
+    toast(`تم تسجيل حضور ${formatNumber(pending.length)} لاعب`);
   });
-  renderAttendance();
-  renderPlayers();
-  renderDisconnected();
-  renderPlayerProfile();
-  toast('تم تسجيل حضور كل اللاعبين في القائمة');
 });
 
 
@@ -1713,10 +1884,11 @@ function downloadCsv(filename, rows) {
 $('#export-btn').addEventListener('click', () => {
   const b = academy[currentBranch];
   const seats = seatSummary();
-  downloadCsv(`academy-${currentBranch}-report.csv`, [['البيان','القيمة'],['الفرع',b.name],['اللاعبون',b.players],['الاشتراكات النشطة',b.active],['نسبة التحصيل',b.collection],['المقاعد المتاحة',seats.available]]);
+  const stats = registerStats(b);
+  downloadCsv(`academy-${currentBranch}-report.csv`, [['البيان','القيمة'],['الفرع',b.name],['اللاعبون',stats.players],['الاشتراكات النشطة',stats.active],['نسبة التحصيل',b.collection],['المقاعد المتاحة',seats.available]]);
 });
 $('[data-page="players"] .toolbar .btn-secondary').addEventListener('click', () => downloadCsv(`players-${currentBranch}.csv`, [['اللاعب','الكود','اسم ولي الأمر','رقم ولي الأمر','الاشتراك','الحضور','الباص','الحالة'], ...academy[currentBranch].playersList.map(player => [player[0], player[1], player[14] || '', player[10] || '', player[2], player[3], player[4], player[5]])]));
-$('[data-page="finance"] .page-heading .btn-secondary').addEventListener('click', () => downloadCsv(`finance-${currentBranch}.csv`, [['البيان','الفئة','التاريخ','طريقة الدفع','القيمة','الحالة'], ...branchRecords[currentBranch].transactions.map(row => [row[0],row[1],row[2],row[3],row[4],row[6]])]));
+$('#finance-export').addEventListener('click', () => downloadCsv(`finance-${currentBranch}.csv`, [['البيان','الفئة','التاريخ','طريقة الدفع','القيمة','الحالة'], ...branchRecords[currentBranch].transactions.map(row => [row[0],row[1],row[2],row[3],row[4],row[6]])]));
 
 $('#today-date').textContent = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(new Date());
 preparePlayerDialog();
