@@ -821,31 +821,59 @@ function ensureCoachSalaries() {
   });
 }
 
+function coachSalarySnapshot(month = currentMonthValue()) {
+  ensureCoachSalaries();
+  const rows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
+  const paidRows = rows.filter(row => row.paid);
+  const unpaidRows = rows.filter(row => !row.paid);
+  return {
+    month,
+    monthLabel: formatMonth(month) || month,
+    rows,
+    totalDue: rows.reduce((sum, row) => sum + row.amountDue, 0),
+    paidTotal: paidRows.reduce((sum, row) => sum + row.amountDue, 0),
+    unpaidTotal: unpaidRows.reduce((sum, row) => sum + row.amountDue, 0),
+    absenceTotal: rows.reduce((sum, row) => sum + Number(row.absenceHours || 0), 0),
+    paidRows,
+    unpaidRows
+  };
+}
+
+function renderOverviewCoachSalaries() {
+  const snap = coachSalarySnapshot();
+  const monthEl = $('#overview-coach-salary-month');
+  if (!monthEl) return;
+  monthEl.textContent = `مرتبات ${snap.monthLabel}`;
+  $('#overview-coach-salary-total').innerHTML = `${formatNumber(snap.totalDue)} <small>ج.م</small>`;
+  $('#overview-coach-salary-paid').textContent = formatCurrency(snap.paidTotal);
+  $('#overview-coach-salary-unpaid').textContent = formatCurrency(snap.unpaidTotal);
+  $('#overview-coach-salary-absence').textContent = formatNumber(snap.absenceTotal);
+  $('#overview-coach-salaries').innerHTML = snap.rows.length ? snap.rows.map((row, i) => {
+    const contract = row.contract === 'full' ? 'راتب شهري' : `${formatNumber(row.workedHours)} ساعة`;
+    const payNote = row.paid ? 'تم الصرف' : 'لم يُصرف';
+    return `<div><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(row.name))}</span><p><b>${escapeHtml(row.name)}</b><small>${contract} · ${payNote}</small></p><strong>${formatCurrency(row.amountDue)}</strong></div>`;
+  }).join('') : '<div class="empty-state">لا توجد مرتبات مسجلة لهذا الشهر.</div>';
+}
+
 function renderCoachSalaries() {
   ensureCoachSalaries();
+  renderOverviewCoachSalaries();
   const monthInput = $('#coach-salary-month');
   const filter = $('#coach-salary-filter');
   if (!monthInput || !filter) return;
   if (!monthInput.value) monthInput.value = currentMonthValue();
   const month = monthInput.value;
-  const monthLabel = formatMonth(month) || month;
-  let rows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
+  const snap = coachSalarySnapshot(month);
+  let rows = snap.rows;
   if (filter.value === 'paid') rows = rows.filter(row => row.paid);
   if (filter.value === 'unpaid') rows = rows.filter(row => !row.paid);
-  const allMonthRows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
-  const totalDue = allMonthRows.reduce((sum, row) => sum + row.amountDue, 0);
-  const paidRows = allMonthRows.filter(row => row.paid);
-  const unpaidRows = allMonthRows.filter(row => !row.paid);
-  const paidTotal = paidRows.reduce((sum, row) => sum + row.amountDue, 0);
-  const unpaidTotal = unpaidRows.reduce((sum, row) => sum + row.amountDue, 0);
-  const absenceTotal = allMonthRows.reduce((sum, row) => sum + Number(row.absenceHours || 0), 0);
-  $('#coach-salary-total').textContent = formatCurrency(totalDue);
-  $('#coach-salary-paid').textContent = formatCurrency(paidTotal);
-  $('#coach-salary-unpaid').textContent = formatCurrency(unpaidTotal);
-  $('#coach-salary-absence').textContent = formatNumber(absenceTotal);
-  $('#coach-salary-month-label').textContent = monthLabel;
-  $('#coach-salary-paid-count').textContent = `${formatNumber(paidRows.length)} مدرب`;
-  $('#coach-salary-unpaid-count').textContent = `${formatNumber(unpaidRows.length)} مدرب`;
+  $('#coach-salary-total').textContent = formatCurrency(snap.totalDue);
+  $('#coach-salary-paid').textContent = formatCurrency(snap.paidTotal);
+  $('#coach-salary-unpaid').textContent = formatCurrency(snap.unpaidTotal);
+  $('#coach-salary-absence').textContent = formatNumber(snap.absenceTotal);
+  $('#coach-salary-month-label').textContent = snap.monthLabel;
+  $('#coach-salary-paid-count').textContent = `${formatNumber(snap.paidRows.length)} مدرب`;
+  $('#coach-salary-unpaid-count').textContent = `${formatNumber(snap.unpaidRows.length)} مدرب`;
   $('#coach-salary-table').innerHTML = rows.length ? rows.map(row => {
     const contract = row.contract === 'full'
       ? '<span class="contract full">Full-time</span>'
@@ -856,7 +884,7 @@ function renderCoachSalaries() {
     const rateCell = row.contract === 'full' ? '—' : `${formatCurrency(row.hourlyRate)} / ساعة`;
     return `<tr>
       <td><div class="player-cell"><span class="avatar a1">${escapeHtml(initials(row.name))}</span><div><b>${escapeHtml(row.name)}</b><small>${escapeHtml(row.role)}</small></div></div></td>
-      <td>${escapeHtml(monthLabel)}</td>
+      <td>${escapeHtml(snap.monthLabel)}</td>
       <td>${contract}</td>
       <td>${hoursCell}</td>
       <td>${rateCell}</td>
