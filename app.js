@@ -889,9 +889,9 @@ function ensureCoachSalaries() {
   });
 }
 
-function coachSalarySnapshot(month = currentMonthValue()) {
+function coachSalarySnapshot(month = currentMonthValue(), branch = currentBranch) {
   ensureCoachSalaries();
-  const rows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
+  const rows = branchRecords[branch].coachSalaries.filter(row => row.month === month);
   const paidRows = rows.filter(row => row.paid);
   const unpaidRows = rows.filter(row => !row.paid);
   return {
@@ -908,19 +908,18 @@ function coachSalarySnapshot(month = currentMonthValue()) {
 }
 
 function renderOverviewCoachSalaries() {
-  const snap = coachSalarySnapshot();
+  const month = currentMonthValue();
   const monthEl = $('#overview-coach-salary-month');
-  if (!monthEl) return;
-  monthEl.textContent = `مرتبات ${snap.monthLabel}`;
-  $('#overview-coach-salary-total').innerHTML = `${formatNumber(snap.totalDue)} <small>ج.م</small>`;
-  $('#overview-coach-salary-paid').textContent = formatCurrency(snap.paidTotal);
-  $('#overview-coach-salary-unpaid').textContent = formatCurrency(snap.unpaidTotal);
-  $('#overview-coach-salary-absence').textContent = formatNumber(snap.absenceTotal);
-  $('#overview-coach-salaries').innerHTML = snap.rows.length ? snap.rows.map((row, i) => {
-    const contract = row.contract === 'full' ? 'راتب شهري' : `${formatNumber(row.workedHours)} ساعة`;
-    const payNote = row.paid ? 'تم الصرف' : 'لم يُصرف';
-    return `<div><span class="avatar a${(i % 3) + 1}">${escapeHtml(initials(row.name))}</span><p><b>${escapeHtml(row.name)}</b><small>${contract} · ${payNote}</small></p><strong>${formatCurrency(row.amountDue)}</strong></div>`;
-  }).join('') : '<div class="empty-state">لا توجد مرتبات مسجلة لهذا الشهر.</div>';
+  const list = $('#overview-salary-branches');
+  if (!monthEl || !list) return;
+  const branches = Object.keys(academy).map(key => {
+    const snap = coachSalarySnapshot(month, key);
+    return { name: academy[key].name, paid: snap.paidTotal, label: snap.monthLabel };
+  });
+  const paidTotal = branches.reduce((sum, branch) => sum + branch.paid, 0);
+  monthEl.textContent = `كل الفروع · ${branches[0]?.label || formatMonth(month)}`;
+  $('#overview-coach-salary-paid').textContent = formatCurrency(paidTotal);
+  list.innerHTML = branches.map(branch => `<li><b>${escapeHtml(branch.name)}</b><strong>${formatCurrency(branch.paid)}</strong></li>`).join('');
 }
 
 function renderCoachSalaries() {
