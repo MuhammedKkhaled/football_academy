@@ -4,6 +4,7 @@ const ABSENCE_LIMIT = 5;
 const NAV_GROUP_PAGES = ['players', 'disconnected', 'subscriptions', 'buses'];
 const ATTENDANCE_GROUP_PAGES = ['attendance', 'staff-attendance'];
 const BUDGET_GROUP_PAGES = ['monthly-budget', 'annual-budget'];
+const COACH_GROUP_PAGES = ['coaches', 'coach-salaries'];
 
 const academy = {
   badr: {
@@ -276,6 +277,14 @@ function showPage(name) {
     if (budgetToggle) budgetToggle.setAttribute('aria-expanded', 'true');
     const budgetMenu = $('#budget-group-menu');
     if (budgetMenu) budgetMenu.hidden = false;
+  }
+  const inCoachGroup = COACH_GROUP_PAGES.includes(name);
+  const coachToggle = $('#coach-group-toggle');
+  if (coachToggle) coachToggle.classList.toggle('child-active', inCoachGroup);
+  if (inCoachGroup) {
+    if (coachToggle) coachToggle.setAttribute('aria-expanded', 'true');
+    const coachMenu = $('#coach-group-menu');
+    if (coachMenu) coachMenu.hidden = false;
   }
   $('#sidebar').classList.remove('open');
   window.scrollTo({top: 0, behavior: 'smooth'});
@@ -763,6 +772,101 @@ function renderExtras() {
   $('#extras-table').innerHTML = academy[currentBranch].extras.map((item, i) => `<tr><td><b>${escapeHtml(item[0])}</b></td><td>${escapeHtml(item[1])}</td><td><input class="price-input" data-extra="${i}" type="number" value="${item[2]}" aria-label="سعر ${escapeHtml(item[0])}"> ج.م</td><td><div class="stock"><i style="--stock:${Math.min(item[3]*3,100)}%"></i><span>${item[3]}</span></div></td><td><span class="status ${item[3]<10?'late':'present'}">${item[3]<10?'مخزون منخفض':'متاح'}</span></td></tr>`).join('');
 }
 
+function coachSalaryRowsForMonth(profiles, month, paidPattern) {
+  return profiles.map((coach, index) => {
+    const paid = paidPattern[index] !== false;
+    if (coach.contract === 'full') {
+      return {
+        month,
+        name: coach.name,
+        role: coach.role,
+        contract: 'full',
+        absenceHours: [6, 4, 2][index % 3],
+        workedHours: 0,
+        hourlyRate: 0,
+        sessions: 0,
+        amountDue: Number(coach.salary || 0),
+        paid
+      };
+    }
+    const sessions = Number(coach.sessions || 0);
+    const sessionRate = Number(coach.sessionRate || 0);
+    const workedHours = Math.round(sessions * 1.5 * 10) / 10;
+    const hourlyRate = sessionRate ? Math.round((sessionRate / 1.5) * 100) / 100 : 0;
+    return {
+      month,
+      name: coach.name,
+      role: coach.role,
+      contract: 'part',
+      absenceHours: [3, 5, 1][index % 3],
+      workedHours,
+      hourlyRate,
+      sessionRate,
+      sessions,
+      amountDue: sessions * sessionRate,
+      paid
+    };
+  });
+}
+
+function ensureCoachSalaries() {
+  Object.values(branchRecords).forEach(records => {
+    if (records.coachSalaries?.length) return;
+    const current = currentMonthValue();
+    const previous = previousMonthValue();
+    records.coachSalaries = [
+      ...coachSalaryRowsForMonth(records.coachProfiles, current, [true, false, true]),
+      ...coachSalaryRowsForMonth(records.coachProfiles, previous, [true, true, false])
+    ];
+  });
+}
+
+function renderCoachSalaries() {
+  ensureCoachSalaries();
+  const monthInput = $('#coach-salary-month');
+  const filter = $('#coach-salary-filter');
+  if (!monthInput || !filter) return;
+  if (!monthInput.value) monthInput.value = currentMonthValue();
+  const month = monthInput.value;
+  const monthLabel = formatMonth(month) || month;
+  let rows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
+  if (filter.value === 'paid') rows = rows.filter(row => row.paid);
+  if (filter.value === 'unpaid') rows = rows.filter(row => !row.paid);
+  const allMonthRows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
+  const totalDue = allMonthRows.reduce((sum, row) => sum + row.amountDue, 0);
+  const paidRows = allMonthRows.filter(row => row.paid);
+  const unpaidRows = allMonthRows.filter(row => !row.paid);
+  const paidTotal = paidRows.reduce((sum, row) => sum + row.amountDue, 0);
+  const unpaidTotal = unpaidRows.reduce((sum, row) => sum + row.amountDue, 0);
+  const absenceTotal = allMonthRows.reduce((sum, row) => sum + Number(row.absenceHours || 0), 0);
+  $('#coach-salary-total').textContent = formatCurrency(totalDue);
+  $('#coach-salary-paid').textContent = formatCurrency(paidTotal);
+  $('#coach-salary-unpaid').textContent = formatCurrency(unpaidTotal);
+  $('#coach-salary-absence').textContent = formatNumber(absenceTotal);
+  $('#coach-salary-month-label').textContent = monthLabel;
+  $('#coach-salary-paid-count').textContent = `${formatNumber(paidRows.length)} مدرب`;
+  $('#coach-salary-unpaid-count').textContent = `${formatNumber(unpaidRows.length)} مدرب`;
+  $('#coach-salary-table').innerHTML = rows.length ? rows.map(row => {
+    const contract = row.contract === 'full'
+      ? '<span class="contract full">Full-time</span>'
+      : '<span class="contract part">Part-time</span>';
+  const hoursCell = row.contract === 'full'
+      ? '—'
+      : `${formatNumber(row.workedHours)} ساعة${row.sessions ? ` · ${formatNumber(row.sessions)} سيشن` : ''}`;
+    const rateCell = row.contract === 'full' ? '—' : `${formatCurrency(row.hourlyRate)} / ساعة`;
+    return `<tr>
+      <td><div class="player-cell"><span class="avatar a1">${escapeHtml(initials(row.name))}</span><div><b>${escapeHtml(row.name)}</b><small>${escapeHtml(row.role)}</small></div></div></td>
+      <td>${escapeHtml(monthLabel)}</td>
+      <td>${contract}</td>
+      <td>${hoursCell}</td>
+      <td>${rateCell}</td>
+      <td>${formatNumber(row.absenceHours)} ساعة</td>
+      <td><strong>${formatCurrency(row.amountDue)}</strong></td>
+      <td><span class="status ${row.paid ? 'present' : 'late'}">${row.paid ? 'تم الصرف' : 'لم يُصرف'}</span></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="8"><div class="empty-state">لا توجد مرتبات مسجلة لهذا الشهر.</div></td></tr>';
+}
+
 function renderCoachProfiles() {
   const profiles = branchRecords[currentBranch].coachProfiles;
   $('#coach-grid').innerHTML = profiles.map((coach, i) => {
@@ -855,6 +959,7 @@ function renderBranch() {
   renderAttendance();
   renderBranchRecords();
   renderCoachProfiles();
+  renderCoachSalaries();
   renderStaffAttendance();
   renderMonthlyBudget();
   renderAnnualBudget();
@@ -1030,6 +1135,14 @@ if (attendanceGroupToggle) {
     $('#attendance-group-menu').hidden = expanded;
   });
 }
+const coachGroupToggle = $('#coach-group-toggle');
+if (coachGroupToggle) {
+  coachGroupToggle.addEventListener('click', () => {
+    const expanded = coachGroupToggle.getAttribute('aria-expanded') === 'true';
+    coachGroupToggle.setAttribute('aria-expanded', String(!expanded));
+    $('#coach-group-menu').hidden = expanded;
+  });
+}
 const budgetGroupToggle = $('#budget-group-toggle');
 if (budgetGroupToggle) {
   budgetGroupToggle.addEventListener('click', () => {
@@ -1061,6 +1174,28 @@ $('#branch-select').addEventListener('change', event => {
   toast(`تم عرض بيانات ${academy[currentBranch].name}`);
 });
 $('#budget-month').addEventListener('change', renderMonthlyBudget);
+const coachSalaryMonth = $('#coach-salary-month');
+if (coachSalaryMonth) coachSalaryMonth.addEventListener('change', renderCoachSalaries);
+const coachSalaryFilter = $('#coach-salary-filter');
+if (coachSalaryFilter) coachSalaryFilter.addEventListener('change', renderCoachSalaries);
+$('#coach-salary-export')?.addEventListener('click', () => {
+  const month = $('#coach-salary-month')?.value || currentMonthValue();
+  const rows = branchRecords[currentBranch].coachSalaries.filter(row => row.month === month);
+  downloadCsv(`coach-salaries-${currentBranch}-${month}.csv`, [
+    ['المدرب', 'الوظيفة', 'الشهر', 'نوع العقد', 'ساعات العمل', 'سعر الساعة', 'ساعات الغياب', 'المستحق', 'حالة الصرف'],
+    ...rows.map(row => [
+      row.name,
+      row.role,
+      formatMonth(row.month),
+      row.contract === 'full' ? 'Full-time' : 'Part-time',
+      row.contract === 'full' ? '' : row.workedHours,
+      row.contract === 'full' ? '' : row.hourlyRate,
+      row.absenceHours,
+      row.amountDue,
+      row.paid ? 'تم الصرف' : 'لم يُصرف'
+    ])
+  ]);
+});
 $('#player-search').addEventListener('input', event => {
   const query = event.target.value.trim();
   $$('#players-table tr').forEach(row => row.hidden = !row.textContent.includes(query));
@@ -1489,9 +1624,25 @@ $('#coach-form').addEventListener('submit', event => {
   }
   branchRecords[currentBranch].coachProfiles.unshift(profile);
   branchRecords[currentBranch].coaches.unshift([initials(name), name, `${role} · لم يسجل بعد`, 'منتظر']);
+  ensureCoachSalaries();
+  const sessionRate = Number(profile.sessionRate || 0);
+  branchRecords[currentBranch].coachSalaries.unshift({
+    month: currentMonthValue(),
+    name,
+    role,
+    contract: profile.contract,
+    absenceHours: 0,
+    workedHours: profile.contract === 'part' ? Math.round((profile.sessions || 0) * 1.5 * 10) / 10 : 0,
+    hourlyRate: profile.contract === 'part' && sessionRate ? Math.round((sessionRate / 1.5) * 100) / 100 : 0,
+    sessionRate,
+    sessions: profile.sessions || 0,
+    amountDue: profile.contract === 'full' ? profile.salary : (profile.sessions || 0) * sessionRate,
+    paid: false
+  });
   form.reset();
   prepareCoachDialog();
   renderCoachProfiles();
+  renderCoachSalaries();
   renderBranchRecords();
   form.closest('dialog').close();
   toast(`تمت إضافة المدرب ${name}`);
